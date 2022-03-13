@@ -64,8 +64,12 @@ module.exports = (_, argv) => {
           use: 'babel-loader',
         },
         {
-          test: /\.sa|css$/,
-          use: [MiniCssExtractPlugin.loader, 'css-loader'],
+          test: /\.(sa|s?c)ss$/,
+          use: [
+            MiniCssExtractPlugin.loader,
+            { loader: 'css-loader', options: { modules: true } },
+            'sass-loader',
+          ],
         },
         {
           test: /\.js$/,
