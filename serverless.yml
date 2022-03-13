@@ -1,0 +1,33 @@
+service: leganto-api
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage: ${opt:stage, 'prod'}
+  timeout: 20
+  region: eu-west-1
+  environment:
+    DB_USER: ${ssm:/leganto/db/user}
+    DB_PASSWORD: ${ssm:/leganto/db/password}
+
+functions:
+  url:
+    handler: src/handler.handler
+    events:
+      - http:
+          path: /
+          method: get
+          cors: true
+      - http:
+          path: /{any+}
+          method: get
+          cors: true
+
+plugins:
+  - serverless-webpack
+  - serverless-offline
+
+custom:
+  serverless-offline:
+    httpPort: 7000
+    noPrependStageInUrl: true
