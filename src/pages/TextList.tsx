@@ -2,6 +2,7 @@ import type { VFC } from 'react'
 import { Redirect, RouteProps } from 'itinero'
 import { filterCodes, LangCode } from 'utils/language'
 import LanguageBar from 'components/LanguageBar'
+import Helmet from 'react-helmet'
 
 type Props = RouteProps<{}, { lang: string }>
 
@@ -37,6 +38,9 @@ function useLanguageCodes(langStr: string): {
 const LanguageList: VFC<{ langs: LangCode[] }> = ({ langs }) => {
   return (
     <div>
+      <Helmet>
+        <title>Leganto - {langs.join(' | ')}</title>
+      </Helmet>
       {langs.join(', ')}
       <LanguageBar langs={langs} />
     </div>

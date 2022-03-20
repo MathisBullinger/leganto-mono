@@ -1,7 +1,7 @@
 import type { VFC } from 'react'
 import { LangCode, languageName } from 'utils/language'
 
-import style from './LanguageBar.css'
+import style from './LanguageBar.module.css'
 
 const LanguageBar: VFC<{ langs: LangCode[] }> = ({ langs }) => {
   return (
