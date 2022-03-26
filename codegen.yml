@@ -4,3 +4,4 @@ generates:
   ./src/api/graphql/types.ts:
     plugins:
       - typescript
+      - typescript-operations

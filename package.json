@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "webpack-dev-server --mode development --hot --config build/webpack.config.js",
     "build": "webpack build --mode production --config build/webpack.config.js",
-    "generate": "graphql-codegen",
+    "generate": "graphql-codegen && node build/patchTypes",
     "test": "jest",
     "lint:check": "eslint . --cache",
     "lint:fix": "eslint . --fix --cache",
@@ -29,6 +29,7 @@
     "@babel/preset-typescript": "^7.16.7",
     "@graphql-codegen/cli": "^2.6.2",
     "@graphql-codegen/typescript": "^2.4.8",
+    "@graphql-codegen/typescript-operations": "^2.3.5",
     "@types/jest": "^27.4.1",
     "@types/react": "^17.0.40",
     "@types/react-dom": "^17.0.13",
