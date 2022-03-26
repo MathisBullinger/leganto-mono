@@ -11,17 +11,10 @@ provider:
     DB_PASSWORD: ${ssm:/leganto/db/password}
 
 functions:
-  url:
+  leganto:
     handler: src/handler.handler
     events:
-      - http:
-          path: /
-          method: get
-          cors: true
-      - http:
-          path: /{any+}
-          method: get
-          cors: true
+      - http: ANY /
 
 plugins:
   - serverless-webpack
@@ -29,5 +22,5 @@ plugins:
 
 custom:
   serverless-offline:
-    httpPort: 7000
+    httpPort: 7001
     noPrependStageInUrl: true
