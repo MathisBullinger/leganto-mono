@@ -1,3 +1,4 @@
 node_modules
 .env
 .webpack
+src/graphql/types.ts

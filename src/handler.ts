@@ -1,17 +1,12 @@
 import { schema } from './graphql'
 import { graphql } from 'graphql'
 import { oneOf } from 'facula'
+import resolvers from './resolvers'
 import type {
   APIGatewayEvent,
   Handler,
   APIGatewayProxyResult,
 } from 'aws-lambda'
-
-const rootValue = {
-  hello: () => {
-    return 'Hello world!'
-  },
-}
 
 export const handler: Handler<
   APIGatewayEvent,
@@ -47,6 +42,8 @@ const isValid = (
     return false
   return true
 }
+
+const rootValue = { ...resolvers.Query, ...resolvers.Mutation }
 
 const resolve = async (source: string, operationName?: string) => {
   try {
