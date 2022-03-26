@@ -13,5 +13,5 @@
     }
   },
   "include": ["src", "test"],
-  "exclude": ["node_modules", "build", "scripts"]
+  "exclude": ["node_modules", "dist", "scripts"]
 }

@@ -4,13 +4,15 @@ const { DefinePlugin } = require('webpack')
 const path = require('path')
 const fs = require('fs')
 
+const baseDir = path.join(__dirname, '..')
+
 module.exports = (_, argv) => {
   const IS_DEV = argv.mode === 'development'
 
   // text-replace any process.env.* variable at build time with the corresponding
   // value found in the .env file if it exists or otherwise with the environment
   // variable of the same name
-  const dotEnvPath = path.join(__dirname, '.env')
+  const dotEnvPath = path.join(baseDir, '.env')
   const dotEnv = fs.existsSync(dotEnvPath)
     ? Object.fromEntries(
         fs
@@ -30,24 +32,20 @@ module.exports = (_, argv) => {
   return {
     mode: IS_DEV ? 'development' : 'production',
     entry: {
-      app: path.join(__dirname, 'src/index.tsx'),
+      app: path.join(baseDir, 'src/index.tsx'),
     },
     output: {
       filename: '[name].js',
-      path: path.join(__dirname, 'build'),
+      path: path.join(baseDir, 'dist'),
       publicPath: '/',
       clean: true,
     },
     resolve: {
       extensions: ['.ts', '.tsx', '.js', '.jsx'],
-      modules: [
-        path.join(__dirname, 'src'),
-        path.join(__dirname, 'node_modules'),
-      ],
+      modules: [path.join(baseDir, 'src'), path.join(baseDir, 'node_modules')],
       alias: {
         react: 'preact/compat',
         'react-dom/test-utils': 'preact/test-utils',
-        // 'react-dom': 'preact/compat',
         'react/jsx-runtime': 'preact/jsx-runtime',
       },
     },
@@ -76,11 +74,19 @@ module.exports = (_, argv) => {
           enforce: 'pre',
           use: ['source-map-loader'],
         },
+        {
+          test: /\.(graphql|gql)$/,
+          exclude: /node_modules/,
+          use: [
+            path.resolve(__dirname, 'loaders/gql.js'),
+            'graphql-tag/loader',
+          ],
+        },
       ],
     },
     plugins: [
       new HtmlWebpackPlugin({
-        template: path.join(__dirname, 'index.html'),
+        template: path.join(baseDir, 'index.html'),
       }),
       new MiniCssExtractPlugin(),
       new DefinePlugin(env),

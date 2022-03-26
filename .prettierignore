@@ -1,2 +1,3 @@
-build
+dist
 *.md
+src/api/graphql/types.ts

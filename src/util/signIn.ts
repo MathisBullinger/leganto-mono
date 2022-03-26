@@ -1,6 +1,7 @@
 import { url } from 'util/url'
 import memoize from 'facula/memoize'
 import identity from 'facula/ident'
+import 'api/client'
 
 export const googleSigninUrl = memoize(
   (redirectUrl = document.location.origin + document.location.pathname) =>

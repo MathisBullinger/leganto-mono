@@ -1,4 +1,5 @@
-build
-/.*.js
+dist
+**/*.js
 /*.config.js
 tests/setup.ts
+src/api/graphql/types.ts
