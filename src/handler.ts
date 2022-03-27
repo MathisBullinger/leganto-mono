@@ -28,12 +28,16 @@ export const handler: Handler<
   }
 
   if (!isValid(request)) return respond(400)
-  return await resolve(request.query, request.operationName)
+  return await resolve(request)
 }
 
-const isValid = (
-  request: any
-): request is { query: string; operationName?: string } => {
+type GQLRequest = {
+  query: string
+  operationName?: string
+  variables?: Record<string, unknown>
+}
+
+const isValid = (request: any): request is GQLRequest => {
   if (typeof request !== 'object' || request === null) return false
   if (typeof request.query !== 'string') return false
   if (oneOf(request.operationName, null, undefined))
@@ -45,9 +49,17 @@ const isValid = (
 
 const rootValue = { ...resolvers.Query, ...resolvers.Mutation }
 
-const resolve = async (source: string, operationName?: string) => {
+const resolve = async (request: GQLRequest) => {
+  console.log('resolve', request)
   try {
-    const result = await graphql({ schema, source, operationName, rootValue })
+    const result = await graphql({
+      schema,
+      rootValue,
+      contextValue: {},
+      source: request.query,
+      operationName: request.operationName,
+      variableValues: request.variables,
+    })
     return respond(200, JSON.stringify(result))
   } catch (e) {
     console.error('failed to resolve query', e)

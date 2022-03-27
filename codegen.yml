@@ -4,3 +4,10 @@ generates:
     plugins:
       - typescript
       - typescript-resolvers
+    config:
+      customResolverFn: |
+        (
+          args: TArgs,
+          context: TContext,
+          info: GraphQLResolveInfo
+        ) => Promise<TResult> | TResult;

@@ -15,7 +15,7 @@ functions:
     handler: src/handler.handler
     events:
       - http:
-          path: /{any*}
+          path: /
           method: ANY
           cors: true
 
