@@ -1,0 +1,3 @@
+mutation SignInGoogle($code: ID!, $redirect: String!) {
+  signInGoogle(code: $code, redirect: $redirect)
+}

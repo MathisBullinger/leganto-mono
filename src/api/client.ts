@@ -1,22 +1,49 @@
-import type { Queries } from './graphql/types'
+import type { Operations } from './graphql/types'
 import * as queries from './graphql/queries'
+import * as mutations from './graphql/mutations'
 import { url } from 'util/url'
 
-const query = Object.fromEntries(
-  Object.entries(queries).map(([name, query]) => [
-    name,
-    (vars?: Record<string, unknown>) => execQuery(query, vars),
-  ])
-) as unknown as {
-  [K in keyof Queries]: (
-    ...p: QueryParams<Queries[K][1]>
-  ) => Promise<Queries[K][0]>
-}
+const endpoint = process.env.API_ENDPOINT!
 
-async function execQuery(query: string, variables?: Record<string, any>) {
-  const response = await fetch(url(process.env.API_ENDPOINT!, { query }))
+const opFactory = <T extends Record<string, string>>(
+  ops: T,
+  method: HTTPMethod
+): MapOps<T> =>
+  Object.fromEntries(
+    Object.entries(ops).map(([name, query]) => [
+      name,
+      (variables?: Record<string, unknown>) =>
+        execute({ query, variables, method }),
+    ])
+  ) as any
+
+const execute = async ({
+  method,
+  ...payload
+}: {
+  query: string
+  variables?: Record<string, any>
+  method?: HTTPMethod
+}) => {
+  const request =
+    method === 'GET'
+      ? fetch(url(endpoint, payload))
+      : fetch(endpoint, { method: 'POST', body: JSON.stringify(payload) })
+
+  const response = await request
   const { data } = await response.json()
   return data
+}
+
+export const query = opFactory(queries, 'GET')
+export const mutate = opFactory(mutations, 'PUT')
+
+type HTTPMethod = 'GET' | 'PUT'
+
+type MapOps<T extends Record<string, string>> = {
+  [K in Extract<keyof T, keyof Operations>]: (
+    ...p: QueryParams<Operations[K][1]>
+  ) => Promise<Operations[K][0]>
 }
 
 type Variables<T> = { [K in keyof T as T[K] extends never ? never : K]: T[K] }
@@ -35,5 +62,3 @@ type OptionalKeys<T> = Exclude<
 >
 
 type RequiredKeys<T> = Exclude<keyof T, OptionalKeys<T>>
-
-query.hello().then(res => console.log(res))

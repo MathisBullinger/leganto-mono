@@ -1,3 +1,0 @@
-query Test($foo: String) {
-  test(foo: $foo)
-}

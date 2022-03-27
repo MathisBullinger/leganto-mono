@@ -4,10 +4,7 @@ import type { StringCase } from 'facula/types'
 
 export const url = (
   base: string,
-  params?: Record<
-    string,
-    string | number | null | undefined | (string | number)[]
-  >,
+  params?: Record<string, any>,
   paramCase?: StringCase
 ) => {
   if (!/^https?:\/\//.test(base)) base = 'https://' + base
@@ -21,7 +18,11 @@ export const url = (
               oneOf(v, '', undefined, null)
                 ? ''
                 : `=${encodeURIComponent(
-                    Array.isArray(v) ? v.join(' ') : v?.toString()
+                    Array.isArray(v)
+                      ? v.join(' ')
+                      : typeof v === 'object' && v !== null
+                      ? JSON.stringify(v)
+                      : v?.toString()
                   )}`
             }`
         )
