@@ -13,10 +13,8 @@ const query = Object.fromEntries(
   ) => Promise<Queries[K][0]>
 }
 
-const endpoint = 'http://localhost:7001'
-
 async function execQuery(query: string, variables?: Record<string, any>) {
-  const response = await fetch(url(endpoint, { query }))
+  const response = await fetch(url(process.env.API_ENDPOINT!, { query }))
   const { data } = await response.json()
   return data
 }
