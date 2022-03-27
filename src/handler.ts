@@ -55,4 +55,11 @@ const resolve = async (source: string, operationName?: string) => {
   }
 }
 
-const respond = (statusCode: number, body?: string) => ({ statusCode, body })
+const respond = (statusCode: number, body?: string) => ({
+  statusCode,
+  body,
+  headers: {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Credentials': true,
+  },
+})

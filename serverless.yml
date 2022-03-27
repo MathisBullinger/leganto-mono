@@ -14,7 +14,10 @@ functions:
   leganto:
     handler: src/handler.handler
     events:
-      - http: ANY /
+      - http:
+          path: /{any*}
+          method: ANY
+          cors: true
 
 plugins:
   - serverless-webpack

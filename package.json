@@ -1,9 +1,10 @@
 {
   "name": "api",
   "scripts": {
-    "dev": "sls offline --stage offline",
+    "dev": "(graphql-codegen --watch) & (sls offline --stage offline) && kill $!",
     "dynamo:start": "npx sls dynamodb start",
-    "dynamo:install": "npx sls dynamodb install"
+    "dynamo:install": "npx sls dynamodb install",
+    "codegen": "graphql-codegen"
   },
   "author": "Mathis Bullinger",
   "devDependencies": {
