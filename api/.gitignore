@@ -1,5 +1,3 @@
-node_modules
 .serverless
 .webpack
-.env
 src/graphql/types.ts

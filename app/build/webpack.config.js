@@ -42,7 +42,11 @@ module.exports = (_, argv) => {
     },
     resolve: {
       extensions: ['.ts', '.tsx', '.js', '.jsx'],
-      modules: [path.join(baseDir, 'src'), path.join(baseDir, 'node_modules')],
+      modules: [
+        path.join(baseDir, 'src'),
+        path.join(baseDir, 'node_modules'),
+        path.join(baseDir, '../node_modules'),
+      ],
       alias: {
         react: 'preact/compat',
         'react-dom/test-utils': 'preact/test-utils',
