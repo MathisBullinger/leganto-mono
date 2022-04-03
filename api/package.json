@@ -4,7 +4,13 @@
     "dev": "(graphql-codegen --watch) & (sls offline --stage offline) && kill $!",
     "dynamo:start": "npx sls dynamodb start",
     "dynamo:install": "npx sls dynamodb install",
-    "codegen": "graphql-codegen"
+    "codegen": "graphql-codegen",
+    "lint:check": "eslint . --cache",
+    "lint:fix": "eslint . --fix --cache",
+    "fmt:check": "prettier --check .",
+    "fmt:fix": "prettier --write .",
+    "lint": "npm run fmt:check && npm run lint:check",
+    "format": "npm run fmt:fix && npm run lint:fix"
   },
   "author": "Mathis Bullinger",
   "devDependencies": {

@@ -1,12 +1,8 @@
 {
+  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "target": "ESNext",
     "lib": ["dom", "dom.iterable", "esnext"],
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "esModuleInterop": true,
     "jsx": "react-jsx",
-    "strict": true,
     "baseUrl": "./src",
     "paths": {
       "test/*": ["../test/*"]

@@ -1,0 +1,5 @@
+node_modules
+.wepback
+.serverless
+dist
+app/src/graphql/types.ts

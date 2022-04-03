@@ -5,6 +5,14 @@
     "url": "git+https://github.com/MathisBullinger/leganto-mono.git"
   },
   "author": "Mathis Bullinger",
+  "scripts": {
+    "lint:check": "eslint . --cache",
+    "lint:fix": "eslint . --fix --cache",
+    "fmt:check": "prettier --check .",
+    "fmt:fix": "prettier --write .",
+    "lint": "npm run fmt:check && npm run lint:check",
+    "format": "npm run fmt:fix && npm run lint:fix"
+  },
   "workspaces": [
     "app",
     "api"

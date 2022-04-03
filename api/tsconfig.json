@@ -1,10 +1,7 @@
 {
+  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "moduleResolution": "node",
     "baseUrl": ".",
-    "esModuleInterop": true,
     "skipLibCheck": true,
     "types": ["node"],
     "resolveJsonModule": true,

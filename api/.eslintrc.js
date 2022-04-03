@@ -1,8 +1,6 @@
 const path = require('path')
 
 module.exports = {
-  extends: ['eslint:recommended'],
-  parser: '@typescript-eslint/parser',
   plugins: ['prettier', '@typescript-eslint'],
   env: {
     node: true,
@@ -10,7 +8,7 @@ module.exports = {
   },
   parserOptions: {
     parser: 'babel-eslint',
-    project: path.resolve(__dirname, './tsconfig.json'),
+    project: path.resolve(__dirname, 'tsconfig.json'),
     tsconfigRootDir: __dirname,
     ecmaVersion: 2018,
     sourceType: 'module',

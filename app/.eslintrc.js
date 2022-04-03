@@ -1,15 +1,14 @@
+const path = require('path')
+
 module.exports = {
-  root: true,
   extends: [
-    'eslint:recommended',
     'prettier',
     'react-app',
     'plugin:react/recommended',
   ],
   plugins: ['@typescript-eslint'],
-  parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: './tsconfig.json',
+    project: path.resolve(__dirname, 'tsconfig.json'),
   },
   rules: {
     'prefer-const': 'warn',
@@ -18,8 +17,8 @@ module.exports = {
     'semi-style': ['error', 'first'],
     'no-debugger': 'warn',
     'no-constant-condition': ['error', { checkLoops: false }],
-    'require-await': 'off',
-    '@typescript-eslint/require-await': 'warn',
+    //'require-await': 'off',
+    //'@typescript-eslint/require-await': 'warn',
     'no-duplicate-imports': 'off',
     '@typescript-eslint/no-duplicate-imports': ['warn'],
     'no-unused-vars': 'off',

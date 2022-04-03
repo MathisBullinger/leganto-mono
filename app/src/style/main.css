@@ -1,11 +1,11 @@
 :root {
-  font-family: Iowan Old Style, Apple Garamond, Baskerville, Times New Roman, 
-    Droid Serif, Times, Source Serif Pro, serif, Apple Color Emoji, 
+  font-family: Iowan Old Style, Apple Garamond, Baskerville, Times New Roman,
+    Droid Serif, Times, Source Serif Pro, serif, Apple Color Emoji,
     Segoe UI Emoji, Segoe UI Symbol;
-    
+
   font-size: 18px;
   text-rendering: optimizelegibility;
-  
+
   --cl-text: #292929;
   --cl-accent: hsl(40, 100%, 80%);
 

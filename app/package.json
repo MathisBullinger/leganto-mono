@@ -6,13 +6,7 @@
     "dev": "webpack-dev-server --mode development --hot --config build/webpack.config.js",
     "build": "webpack build --mode production --config build/webpack.config.js",
     "generate": "graphql-codegen && node build/patchTypes",
-    "test": "jest",
-    "lint:check": "eslint . --cache",
-    "lint:fix": "eslint . --fix --cache",
-    "fmt:check": "prettier --check .",
-    "fmt:fix": "prettier --write .",
-    "lint": "npm run fmt:check && npm run lint:check",
-    "format": "npm run fmt:fix && npm run lint:fix"
+    "test": "jest"
   },
   "author": "Mathis Bullinger",
   "license": "ISC",
