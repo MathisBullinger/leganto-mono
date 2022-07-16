@@ -1,6 +1,6 @@
 import { url } from 'util/url'
-import memoize from 'facula/memoize'
-import identity from 'facula/ident'
+import memoize from 'froebel/memoize'
+import identity from 'froebel/ident'
 import * as api from 'api/client'
 
 export const googleSigninUrl = memoize(

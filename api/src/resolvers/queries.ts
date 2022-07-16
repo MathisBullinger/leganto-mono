@@ -1,5 +1,5 @@
-import type { QueryResolvers } from '../graphql/types'
+import type { Queries } from './types'
 
-export const queries: QueryResolvers = {
+export const queries: Queries = {
   hello: () => 'hello world',
 }
