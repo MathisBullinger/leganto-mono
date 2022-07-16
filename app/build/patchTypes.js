@@ -1,6 +1,6 @@
 const fs = require('fs')
 const path = require('path')
-const { uncapitalize } = require('facula/case')
+const { uncapitalize } = require('froebel/case')
 
 const typeFile = path.resolve(__dirname, '../src/api/graphql/types.ts')
 

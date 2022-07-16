@@ -4,6 +4,8 @@
     "module": "ESNext",
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "strict": true
-  }
+    "strict": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "exclude": ["node_modules"]
 }

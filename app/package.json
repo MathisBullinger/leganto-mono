@@ -1,23 +1,18 @@
 {
-  "name": "frontend",
-  "version": "1.0.0",
-  "main": "index.js",
+  "name": "app",
+  "private": true,
   "scripts": {
     "dev": "webpack-dev-server --mode development --hot --config build/webpack.config.js",
     "build": "webpack build --mode production --config build/webpack.config.js",
     "generate": "graphql-codegen && node build/patchTypes",
     "test": "jest"
   },
-  "author": "Mathis Bullinger",
-  "license": "ISC",
   "dependencies": {
-    "facula": "^0.10.1",
     "itinero": "^0.6.0",
     "preact": "^10.6.6",
     "react-helmet": "^6.1.0"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.16.11",
     "@babel/preset-react": "^7.16.7",
     "@graphql-codegen/typescript-operations": "^2.3.5",
     "@types/jest": "^27.4.1",

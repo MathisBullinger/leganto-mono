@@ -1,6 +1,6 @@
-import oneOf from 'facula/oneOf'
-import { transformCase } from 'facula/case'
-import type { StringCase } from 'facula/types'
+import oneOf from 'froebel/oneOf'
+import { transformCase } from 'froebel/case'
+import type { StringCase } from 'froebel/types'
 
 export const url = (
   base: string,
