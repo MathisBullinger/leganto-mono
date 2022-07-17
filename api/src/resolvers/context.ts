@@ -1,33 +1,12 @@
 export const createContext = () => {
-  const headers: [string, string][] = []
+  const headers = new Map<string, string[]>()
 
   return {
     addHeader(name: string, value: string) {
-      headers.push([name, value])
+      if (!headers.has(name)) headers.set(name, [value])
+      else headers.get(name)!.push(value)
     },
-    getHeaders() {
-      const multiValue = new Set(
-        headers
-          .map(([name]) => name)
-          .filter((name, i, list) => list.indexOf(name) !== i)
-      )
-
-      const singleValue = Object.fromEntries(
-        headers.filter(([name]) => !multiValue.has(name))
-      )
-
-      const multiValueHeaders = Object.fromEntries(
-        [...multiValue].map(name => [
-          name,
-          headers.filter(([key]) => key === name).map(([, value]) => value),
-        ])
-      )
-
-      return {
-        headers: singleValue,
-        multiValueHeaders,
-      }
-    },
+    headers,
   }
 }
 

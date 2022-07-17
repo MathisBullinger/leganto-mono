@@ -1,3 +1,2 @@
-.serverless
-.webpack
+dist
 src/graphql/types.ts
