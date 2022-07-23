@@ -6,9 +6,13 @@ export const mutations: Mutations = {
     console.log('signin', { code, redirect })
 
     const result = await google.exchangeToken(code, redirect)
-    // console.log(result)
+
     if (result.status !== 200 || !result.data?.id_token)
       throw Error('did not receive id_token')
+
+    const payload = await google.verifyToken(result.data.id_token)
+
+    console.log(payload)
 
     return 0
   },

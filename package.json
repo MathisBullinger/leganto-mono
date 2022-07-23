@@ -24,6 +24,7 @@
     "@babel/preset-typescript": "^7.16.7",
     "@graphql-codegen/cli": "^2.6.2",
     "@graphql-codegen/typescript": "^2.4.8",
+    "@types/jwk-to-pem": "^2.0.1",
     "@typescript-eslint/parser": "^5.17.0",
     "babel-loader": "^8.2.4",
     "eslint": "^8.12.0",
