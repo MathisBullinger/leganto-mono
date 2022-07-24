@@ -11,7 +11,7 @@ export const googleSigninUrl = memoize(
         clientId: process.env.GOOGLE_CLIENT_ID,
         redirectUri: redirectUrl,
         responseType: 'code',
-        scope: ['openid'],
+        scope: ['openid', 'https://www.googleapis.com/auth/userinfo.profile'],
         state: redirectUrl,
       },
       'snake'

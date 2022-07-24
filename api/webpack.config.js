@@ -29,6 +29,9 @@ module.exports = (env, argv) => {
         '~': path.resolve(__dirname, 'src'),
       },
     },
+    externals: {
+      knex: 'commonjs knex',
+    },
     module: {
       rules: [
         {
