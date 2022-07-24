@@ -16,7 +16,8 @@
   },
   "workspaces": [
     "app",
-    "api"
+    "api",
+    "db"
   ],
   "devDependencies": {
     "@babel/core": "^7.17.8",
