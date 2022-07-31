@@ -28,7 +28,11 @@ const execute = async ({
   const request =
     method === 'GET'
       ? fetch(url(endpoint, payload))
-      : fetch(endpoint, { method: 'POST', body: JSON.stringify(payload) })
+      : fetch(endpoint, {
+          method: 'POST',
+          body: JSON.stringify(payload),
+          headers: { 'Content-Type': 'application/json' },
+        })
 
   const response = await request
   const { data } = await response.json()

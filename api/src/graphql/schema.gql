@@ -8,5 +8,10 @@ type Query {
 }
 
 type Mutation {
-  signInGoogle(code: ID!, redirect: String!): Int
+  signInGoogle(code: ID!, redirect: String!): Person
+}
+
+type Person {
+  id: String!
+  name: String!
 }

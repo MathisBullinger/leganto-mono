@@ -1,0 +1,46 @@
+.icon {
+  width: 2rem;
+  height: 2rem;
+
+  path {
+    fill: #000;
+  }
+
+  &[data-icon='loadingDots'] {
+    --duration: 1s;
+    --delay: calc(var(--duration) / 16);
+    --offset: 7%;
+
+    circle {
+      animation-name: dots;
+      animation-duration: var(--duration);
+      animation-iteration-count: infinite;
+
+      &:nth-of-type(2) {
+        animation-delay: var(--delay);
+      }
+
+      &:nth-of-type(3) {
+        animation-delay: calc(var(--delay) * 2);
+      }
+    }
+  }
+}
+
+@keyframes dots {
+  25% {
+    transform: translateY(0);
+  }
+
+  42% {
+    transform: translateY(calc(var(--offset) * -1));
+  }
+
+  58% {
+    transform: translateY(var(--offset));
+  }
+
+  75% {
+    transform: translateY(0);
+  }
+}

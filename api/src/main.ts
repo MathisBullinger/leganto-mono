@@ -5,7 +5,7 @@ import oneOf from 'froebel/oneOf'
 import resolvers, { createContext } from './resolvers'
 
 const app = express()
-app.use(express.text())
+app.use(express.json())
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*')
@@ -13,18 +13,14 @@ app.use((req, res, next) => {
   next()
 })
 
+app.options('*', (req, res) => {
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+  res.sendStatus(204)
+})
+
 app.post('/', async (req, res) => {
-  let request: Record<string, string | undefined> = {}
-
-  try {
-    request = JSON.parse(req.body)
-  } catch (e) {
-    console.error('failed to parse query', e)
-    return res.sendStatus(400)
-  }
-
-  if (!isValid(request)) return res.sendStatus(400)
-  return await resolve(request, res)
+  if (!isValid(req.body)) return res.sendStatus(400)
+  return await resolve(req.body, res)
 })
 
 app.get('/', async (req, res) => {

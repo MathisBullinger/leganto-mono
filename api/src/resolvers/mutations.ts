@@ -2,6 +2,7 @@ import type { Mutations } from './types'
 import * as google from '../oauth/google'
 import * as db from '../db'
 import { generateId } from '../util/id'
+import pick from 'froebel/pick'
 
 export const mutations: Mutations = {
   async signInGoogle({ code, redirect }, context) {
@@ -12,20 +13,21 @@ export const mutations: Mutations = {
 
     const payload = await google.verifyToken(result.data.id_token)
 
-    console.log(payload)
-
     const signIn = await db.SigninGoogle.query()
       .findById(payload.sub)
       .withGraphJoined('user')
 
-    console.log({ signIn })
+    let user = (signIn as any)?.user
 
     if (!signIn) {
       const userId = generateId(6)
-      await db.User.query().insert({ id: userId, name: payload.name })
+      user = await db.User.query()
+        .insert({ id: userId, name: payload.name })
+        .returning('*')
       await db.SigninGoogle.query().insert({ googleId: payload.sub, userId })
+      user = { id: userId, name: payload.name }
     }
 
-    return 0
+    return pick(user, 'id', 'name')
   },
 }

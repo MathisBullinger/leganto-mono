@@ -1,0 +1,27 @@
+.bar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 3.5rem;
+  background-color: var(--cl-surface);
+  box-shadow: 1px 1px rgb(0 0 0 / 5%), 0 1px 1px rgb(0 0 0 / 5%);
+  display: flex;
+  align-items: center;
+  padding: 0 1.5rem;
+  font-family: var(--font-ui);
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+.signInButton {
+  text-transform: uppercase;
+
+  &.singedIn {
+    text-transform: unset;
+  }
+}
