@@ -8,20 +8,37 @@
   box-shadow: 1px 1px rgb(0 0 0 / 5%), 0 1px 1px rgb(0 0 0 / 5%);
   display: flex;
   align-items: center;
-  padding: 0 1.5rem;
+  justify-content: space-between;
+  padding: 0 2rem;
   font-family: var(--font-ui);
+  user-select: none;
 }
 
+.left,
 .right {
   display: flex;
   align-items: center;
-  margin-left: auto;
+}
+
+.right {
+  margin-right: -0.9rem;
+}
+
+.logo {
+  font-size: 1.4rem;
+  font-family: var(--font-text);
 }
 
 .signInButton {
   text-transform: uppercase;
 
-  &.singedIn {
+  &.signedIn {
     text-transform: unset;
   }
+}
+
+.loading {
+  width: 1.3rem;
+  height: 1.3rem;
+  margin-right: 0.9rem;
 }

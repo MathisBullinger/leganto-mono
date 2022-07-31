@@ -12,6 +12,7 @@
   --cl-hover: rgb(0 0 0 / 8%);
 
   --font-ui: Gill Sans, system-ui, sans-serif;
+  --font-text: Baskerville, serif;
 
   background-color: var(--cl-back);
   color: var(--cl-text);

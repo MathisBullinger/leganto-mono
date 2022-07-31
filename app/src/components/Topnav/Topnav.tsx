@@ -5,6 +5,9 @@ import style from './Topnav.module.scss'
 const Topnav: VFC = () => {
   return (
     <header className={style.bar}>
+      <div className={style.left}>
+        <span className={style.logo}>Leganto</span>
+      </div>
       <div className={style.right}>
         <UserButton />
       </div>

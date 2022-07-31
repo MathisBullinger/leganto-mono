@@ -19,7 +19,7 @@ const SignedOut: VFC<{ setUser: Context['setUser'] }> = ({ setUser }) => {
   const googleSignInUrl = signIn.googleSigninUrl()
   const loading = signIn.useGoogleSignin(location.search, setUser)
 
-  if (loading) return <Icon type="loadingDots" />
+  if (loading) return <Icon type="loadingDots" className={style.loading} />
 
   return (
     <Button className={style.signInButton} link={googleSignInUrl}>
