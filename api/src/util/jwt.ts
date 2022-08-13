@@ -12,3 +12,6 @@ if (!publicKey || !privateKey) throw Error('missing jwt key')
 
 export const sign = (payload: Record<string, unknown>) =>
   jwt.sign(payload, privateKey, { algorithm: 'RS256' })
+
+export const decode = (data: string) =>
+  jwt.verify(data, publicKey) as jwt.JwtPayload

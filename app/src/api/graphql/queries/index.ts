@@ -1,1 +1,1 @@
-export { string as hello } from './hello.gql'
+export { string as me } from './me.gql'

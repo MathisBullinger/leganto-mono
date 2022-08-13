@@ -13,7 +13,13 @@ const opFactory = <T extends Record<string, string>>(
     Object.entries(ops).map(([name, query]) => [
       name,
       (variables?: Record<string, unknown>) =>
-        execute({ query, variables, method }),
+        execute(
+          Object.fromEntries(
+            Object.entries({ query, variables, method }).filter(
+              ([, v]) => v !== undefined
+            )
+          ) as any
+        ),
     ])
   ) as any
 

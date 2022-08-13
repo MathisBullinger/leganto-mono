@@ -3,6 +3,7 @@ import { schema } from './graphql'
 import { graphql } from 'graphql'
 import oneOf from 'froebel/oneOf'
 import resolvers, { createContext } from './resolvers'
+import { IncomingHttpHeaders } from 'http'
 
 const app = express()
 app.use(express.json())
@@ -25,12 +26,13 @@ app.options('*', (req, res) => {
 
 app.post('/', async (req, res) => {
   if (!isValid(req.body)) return res.sendStatus(400)
-  return await resolve(req.body, res)
+  return await resolve(req.body, res, req.headers)
 })
 
 app.get('/', async (req, res) => {
   if (!isValid(req.query)) return res.sendStatus(400)
-  return await resolve(req.query, res)
+  console.log(req.headers)
+  return await resolve(req.query, res, req.headers)
 })
 
 app.listen(7001)
@@ -53,9 +55,28 @@ const isValid = (request: any): request is GQLRequest => {
 
 const rootValue = { ...resolvers.Query, ...resolvers.Mutation }
 
-const resolve = async (gqlRequest: GQLRequest, res: Response) => {
+const resolve = async (
+  gqlRequest: GQLRequest,
+  res: Response,
+  headers: IncomingHttpHeaders
+) => {
+  const headerMap = new Map(
+    Object.entries(headers).map(([k, v]) => [k.toLowerCase(), v])
+  )
+  const rawCookies = headerMap.get('cookie')
+  const cookies = Object.fromEntries(
+    (!rawCookies
+      ? []
+      : typeof rawCookies === 'string'
+      ? rawCookies.split('; ')
+      : rawCookies
+    )
+      .map(cookie => cookie.split('='))
+      .map(([k, v]) => [k.trim(), v])
+  )
+
   try {
-    const context = createContext()
+    const context = createContext(cookies)
     const result = await graphql({
       schema,
       rootValue,

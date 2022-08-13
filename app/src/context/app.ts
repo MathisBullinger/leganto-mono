@@ -1,12 +1,24 @@
 import { createContext, useContext as useReactContext, useState } from 'react'
 
 export const useValue = () => {
-  const [user, setUser] = useState<User>()
+  const [user, setUser_] = useState<User | undefined>(readUser())
+
+  const setUser = (user: User | undefined) => {
+    if (user) localStorage.setItem('user', JSON.stringify(user))
+    else localStorage.removeItem('user')
+    setUser_(user)
+  }
 
   return {
     user,
     setUser,
   }
+}
+
+const readUser = (): User | undefined => {
+  const userData = localStorage.getItem('user')
+  if (!userData) return undefined
+  return JSON.parse(userData)
 }
 
 type User = { id: string; name: string }
