@@ -3,6 +3,7 @@ import * as google from '../oauth/google'
 import * as db from '../db'
 import { generateId } from '../util/id'
 import pick from 'froebel/pick'
+import * as jwt from '../util/jwt'
 
 export const mutations: Mutations = {
   async signInGoogle({ code, redirect }, context) {
@@ -27,6 +28,13 @@ export const mutations: Mutations = {
       await db.SigninGoogle.query().insert({ googleId: payload.sub, userId })
       user = { id: userId, name: payload.name }
     }
+
+    context.addHeader(
+      'Set-Cookie',
+      `auth=${jwt.sign({ id: user.id })}; Expires=${new Date(
+        Date.now() + 1000 * 60 * 60 * 24 * 180
+      ).toUTCString()}; HttpOnly`
+    )
 
     return pick(user, 'id', 'name')
   },

@@ -27,11 +27,12 @@ const execute = async ({
 }) => {
   const request =
     method === 'GET'
-      ? fetch(url(endpoint, payload))
+      ? fetch(url(endpoint, payload), { credentials: 'include' })
       : fetch(endpoint, {
           method: 'POST',
           body: JSON.stringify(payload),
           headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
         })
 
   const response = await request

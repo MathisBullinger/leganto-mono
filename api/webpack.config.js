@@ -2,6 +2,21 @@ const webpack = require('webpack')
 const fs = require('fs')
 const path = require('path')
 const NodemonPlugin = require('nodemon-webpack-plugin')
+const map = require('froebel/map')
+
+const processEnv = map(
+  fs.existsSync('.env')
+    ? Object.fromEntries(
+        fs
+          .readFileSync('.env', 'utf-8')
+          .split('\n')
+          .filter(Boolean)
+          .map(v => v.split('='))
+          .map(([k, v]) => [k, JSON.stringify(v)])
+      )
+    : {},
+  (k, v) => [`process.env.${k}`, v]
+)
 
 module.exports = (env, argv) => {
   const isDev = argv.mode === 'development'
@@ -63,18 +78,7 @@ module.exports = (env, argv) => {
       ],
     },
     plugins: [
-      new webpack.DefinePlugin(
-        fs.existsSync('.env')
-          ? Object.fromEntries(
-              fs
-                .readFileSync('.env', 'utf-8')
-                .split('\n')
-                .filter(Boolean)
-                .map(v => v.split('='))
-                .map(([k, v]) => [`process.env.${k}`, JSON.stringify(v)])
-            )
-          : {}
-      ),
+      new webpack.DefinePlugin(processEnv),
       isDev && new NodemonPlugin(),
     ].filter(Boolean),
   }
