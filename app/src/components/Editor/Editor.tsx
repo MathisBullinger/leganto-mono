@@ -31,7 +31,12 @@ const EditorWrapper: FC = () => {
 
   return (
     <div className={style.wrapper}>
-      <Textarea value={title} onChange={setTitle} placeholder="Title" />
+      <Textarea
+        value={title}
+        onChange={setTitle}
+        placeholder="Title"
+        className={style.title}
+      />
       <EditorContent editor={editor} lang="en" />
     </div>
   )

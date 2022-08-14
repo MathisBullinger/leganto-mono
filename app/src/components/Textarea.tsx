@@ -1,6 +1,6 @@
 import { FC, HTMLProps, useState } from 'react'
 import cn from 'util/css'
-import style from './TextArea.module.scss'
+import style from './Textarea.module.scss'
 
 type Props = {
   value: string
