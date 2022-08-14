@@ -47,4 +47,6 @@ export const mutations: Mutations = {
 
     return 0
   },
+
+  createText: () => ({ id: generateId(16) }),
 }

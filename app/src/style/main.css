@@ -14,13 +14,20 @@
   --font-ui: Gill Sans, system-ui, sans-serif;
   --font-text: Baskerville, serif;
 
+  --topnav-height: 3.5rem;
+
   background-color: var(--cl-back);
   color: var(--cl-text);
   box-sizing: border-box;
 }
 
+:root:global(.inverted) {
+  background-color: var(--cl-surface);
+}
+
 body {
   margin: 0;
+  padding-top: var(--topnav-height);
 }
 
 *,

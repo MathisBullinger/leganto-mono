@@ -1,0 +1,8 @@
+.wrapper {
+  max-width: 50rem;
+  margin-top: 2rem;
+
+  > div > div:focus {
+    outline: none;
+  }
+}

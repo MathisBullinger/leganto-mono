@@ -1,0 +1,5 @@
+mutation CreateText {
+  createText {
+    id
+  }
+}

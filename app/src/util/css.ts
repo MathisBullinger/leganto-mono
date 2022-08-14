@@ -1,4 +1,15 @@
-const classNames = (...classes: (string | undefined | false)[]) =>
-  classes.filter(v => typeof v === 'string').join(' ')
+const classNames = (
+  ...classes: (string | undefined | false | Record<string, unknown>)[]
+) =>
+  classes
+    .flatMap(v =>
+      typeof v === 'object' && v !== null
+        ? Object.entries(v)
+            .filter(([k, v]) => !!v)
+            .map(([k]) => k)
+        : [v]
+    )
+    .filter(v => typeof v === 'string')
+    .join(' ')
 
 export default classNames

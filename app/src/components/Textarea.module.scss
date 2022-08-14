@@ -1,0 +1,9 @@
+.textArea {
+  resize: none;
+  width: 100%;
+  border: none;
+
+  &:focus {
+    outline: none;
+  }
+}
