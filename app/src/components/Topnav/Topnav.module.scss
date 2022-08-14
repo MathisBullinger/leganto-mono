@@ -1,3 +1,13 @@
+@mixin visually-hidden {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
 .bar {
   position: fixed;
   left: 0;
@@ -31,9 +41,26 @@
 
 .signInButton {
   text-transform: uppercase;
+  position: relative;
 
   &.signedIn {
     text-transform: unset;
+  }
+
+  &:hover,
+  &:focus-within {
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 100%;
+      width: 100%;
+      height: 1rem;
+    }
+  }
+
+  &:not(:hover, :focus-within) .dropdown {
+    @include visually-hidden;
   }
 }
 
@@ -41,4 +68,31 @@
   width: 1.3rem;
   height: 1.3rem;
   margin-right: 0.9rem;
+}
+
+.dropdown {
+  position: absolute;
+  margin: 0;
+  top: 100%;
+  margin-top: 0.2rem;
+  right: 0;
+  min-width: 100%;
+  background-color: var(--cl-surface);
+  list-style: none;
+  padding: 0;
+  box-shadow: 0 1px 5px 0 rgb(0 0 0 / 20%), 0 2px 2px 0 rgb(0 0 0 / 14%),
+    0 3px 1px -2px rgb(0 0 0 / 12%);
+  display: flex;
+  flex-direction: column;
+  border-radius: 0.25rem;
+
+  button {
+    width: 100%;
+    text-align: left;
+    border-radius: unset;
+
+    :hover {
+      background-color: unset;
+    }
+  }
 }

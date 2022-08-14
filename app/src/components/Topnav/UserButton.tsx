@@ -1,6 +1,7 @@
-import type { VFC } from 'react'
+import { VFC } from 'react'
 import Button from 'components/Button'
 import Icon from 'components/Icon'
+import Dropdown from './Dropdown'
 import { useContext, Context } from 'context/app'
 import { useLocation } from 'itinero'
 import * as signIn from 'util/signIn'
@@ -30,8 +31,16 @@ const SignedOut: VFC<{ setUser: Context['setUser'] }> = ({ setUser }) => {
 
 const SignedIn: VFC<{ user: Exclude<Context['user'], undefined> }> = ({
   user,
-}) => (
-  <Button className={cn(style.signInButton, style.signedIn)}>
-    {user.name}
-  </Button>
-)
+}) => {
+  return (
+    <Button
+      className={cn(style.signInButton, style.signedIn)}
+      onKeyDown={({ key, target }) => {
+        if (key === 'Escape') (target as HTMLElement).blur()
+      }}
+    >
+      {user.name}
+      {<Dropdown />}
+    </Button>
+  )
+}

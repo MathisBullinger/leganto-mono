@@ -31,7 +31,6 @@ app.post('/', async (req, res) => {
 
 app.get('/', async (req, res) => {
   if (!isValid(req.query)) return res.sendStatus(400)
-  console.log(req.headers)
   return await resolve(req.query, res, req.headers)
 })
 

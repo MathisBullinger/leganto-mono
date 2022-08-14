@@ -38,4 +38,13 @@ export const mutations: Mutations = {
 
     return pick(user, 'id', 'name')
   },
+
+  signOut(_, context) {
+    context.addHeader(
+      'Set-Cookie',
+      `auth=deleted; expires=${new Date(0).toUTCString()}`
+    )
+
+    return 0
+  },
 }
