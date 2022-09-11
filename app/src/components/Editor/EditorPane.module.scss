@@ -1,0 +1,29 @@
+.pane {
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+  width: 40rem;
+  max-width: 100%;
+  margin-top: 2rem;
+  font-family: var(--font-text);
+
+  > div {
+    display: contents;
+
+    > div {
+      flex-grow: 1;
+      padding-top: 1rem;
+      font-size: 1.23rem;
+
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+
+  .title {
+    font-size: 1.8rem;
+    line-height: 1.4;
+    border-bottom: 1px solid #000;
+  }
+}

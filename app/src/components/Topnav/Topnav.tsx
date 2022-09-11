@@ -7,6 +7,7 @@ const Topnav: VFC = () => (
     <div className={style.left}>
       <span className={style.logo}>Leganto</span>
     </div>
+    <div id="custom-header-content" />
     <div className={style.right}>
       <UserButton />
     </div>
