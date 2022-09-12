@@ -1,8 +1,8 @@
 .page {
-  padding: 0 2rem;
   background-color: var(--cl-surface);
   overflow: auto;
   min-height: calc(100vh - var(--topnav-height));
+  height: 1px;
   display: flex;
   flex-direction: column;
 }

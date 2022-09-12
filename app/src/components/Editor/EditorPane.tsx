@@ -1,4 +1,5 @@
 import { FC, useState } from 'react'
+import cn from 'util/css'
 import { useEditor, EditorContent } from '@tiptap/react'
 import Document from '@tiptap/extension-document'
 import Paragraph from '@tiptap/extension-paragraph'
@@ -14,9 +15,10 @@ import style from './EditorPane.module.scss'
 
 type Props = {
   language: LangCode
+  highlighted: boolean
 }
 
-const EditorPane: FC<Props> = () => {
+const EditorPane: FC<Props> = ({ highlighted }) => {
   const editor = useEditor({
     extensions: [
       Document,
@@ -38,7 +40,7 @@ const EditorPane: FC<Props> = () => {
   const [title, setTitle] = useState('')
 
   return (
-    <div className={style.pane}>
+    <div className={cn(style.pane, { [style.highlighted]: highlighted })}>
       <Textarea
         value={title}
         onChange={setTitle}

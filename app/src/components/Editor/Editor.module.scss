@@ -1,5 +1,11 @@
 .wrapper {
   display: flex;
+  padding: 0 2rem;
   justify-content: center;
-  gap: 2rem;
+  align-items: start;
+  min-height: 100%;
+}
+
+.highlight {
+  background-color: var(--cl-back);
 }

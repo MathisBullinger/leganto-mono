@@ -5,15 +5,22 @@ import style from './LanguageSelection.module.scss'
 
 type Props = {
   languages: LangCode[]
+  onHighlight: (lang: LangCode | null) => void
 }
 
-const LanguageSelection: FC<Props> = ({ languages }) => {
+const LanguageSelection: FC<Props> = ({ languages, onHighlight }) => {
   return (
-    <ul className={style.bar}>
+    <ol className={style.bar}>
       {languages.map(code => (
-        <li key={code}>{languageName[code]}</li>
+        <li
+          key={code}
+          onMouseEnter={() => onHighlight(code)}
+          onMouseLeave={() => onHighlight(null)}
+        >
+          {languageName[code]}
+        </li>
       ))}
-    </ul>
+    </ol>
   )
 }
 
