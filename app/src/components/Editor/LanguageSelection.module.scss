@@ -8,9 +8,37 @@
     padding: 0.6rem 0.9rem;
     border-radius: 0.25rem;
     cursor: grab;
+    transition: all 0.4s cubic-bezier(0.33, 1, 0.68, 1);
+    transition-property: transform, opacity;
 
     &:hover {
       background-color: var(--cl-surface);
     }
   }
+}
+
+.dragged {
+  transform: scale(0.85);
+  opacity: 0.7;
+}
+
+.rearrange {
+  li {
+    background-color: var(--cl-surface);
+
+    &:not(.dragged) {
+      transform: scale(0.95);
+      opacity: 0.9;
+    }
+  }
+}
+
+#shadow {
+  clip: rect(0 0 0 0); 
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap; 
+  width: 1px;
 }
