@@ -16,9 +16,10 @@ import style from './EditorPane.module.scss'
 type Props = {
   language: LangCode
   highlighted: boolean
+  onUpdateSize: (sizes: number[]) => void
 }
 
-const EditorPane: FC<Props> = ({ highlighted }) => {
+const EditorPane: FC<Props> = ({ highlighted, onUpdateSize }) => {
   const editor = useEditor({
     extensions: [
       Document,
@@ -32,7 +33,11 @@ const EditorPane: FC<Props> = ({ highlighted }) => {
     ],
     content: '',
     onUpdate: ({ editor }) => {
-      console.log(editor.getJSON())
+      const sizes = [...editor.view.dom.children]
+        .filter((node): node is HTMLElement => node instanceof HTMLElement)
+        .map(node => node.offsetHeight)
+
+      onUpdateSize(sizes)
     },
     injectCSS: false,
   })
