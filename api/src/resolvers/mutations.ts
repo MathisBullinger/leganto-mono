@@ -4,6 +4,7 @@ import * as db from '../db'
 import { generateId } from '../util/id'
 import pick from 'froebel/pick'
 import * as jwt from '../util/jwt'
+import { PublicError } from '~/util/error'
 
 export const mutations: Mutations = {
   async signInGoogle({ code, redirect }, context) {
@@ -49,18 +50,56 @@ export const mutations: Mutations = {
   },
 
   async createText(_, context) {
-    context.assertSignedIn('create a story')
-
+    const userId = context.assertSignedIn()
     const id = generateId(16)
-    await db.Story.query().insert({ id, author: context.userId, isDraft: true })
-
+    const text = { id, author: userId, isDraft: true }
+    console.log('create text', text)
+    await db.Story.query().insert(text as any)
     return { id }
   },
 
   async updateText({ textId, updates }, context) {
     context.assertSignedIn()
 
-    console.log('update', ...updates)
+    const story = await db.Story.query().findById(textId)
+
+    if (!story || story.author !== context.userId) {
+      throw new PublicError("You don't have permission to edit this story")
+    }
+
+    const updatedLanguages = [...new Set(updates.map(v => v.language))]
+
+    const translations = await db.Translation.query()
+      .where('story', story.id)
+      .whereIn('language', updatedLanguages)
+
+    const newLanguages = updatedLanguages.filter(
+      language => !translations.find(v => v.language === language)
+    )
+
+    if (newLanguages.length) {
+      await db.Translation.query().insert(
+        newLanguages.map(language => ({ story: story.id, language }))
+      )
+    }
+
+    const updatedTitles = new Map<string, string>()
+
+    for (const update of updates) {
+      if (typeof update.title === 'string') {
+        updatedTitles.set(update.language, update.title)
+      }
+    }
+
+    await Promise.all(
+      [...updatedTitles].map(([language, title]) =>
+        db.Translation.query().patch({ title }).findById([story.id, language])
+      )
+    )
+
+    if (newLanguages.length || updatedTitles.size) {
+      await db.Story.query().patch({ updated: new Date() }).findById(story.id)
+    }
 
     return { id: textId }
   },

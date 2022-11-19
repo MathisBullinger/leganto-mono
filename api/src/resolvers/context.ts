@@ -14,9 +14,11 @@ export const createContext = (cookies: Record<string, string>) => {
     }
   }
 
-  const assertSignedIn = (action?: string) => {
-    if (!userId)
+  const assertSignedIn = (action?: string): string => {
+    if (!userId) {
       throw new PublicError('must be signed in', action && ` to ${action}`)
+    }
+    return userId
   }
 
   return {

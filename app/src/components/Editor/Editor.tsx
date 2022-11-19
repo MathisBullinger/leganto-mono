@@ -5,9 +5,10 @@ import type { LangCode } from 'utils/language'
 import LanguageSelect from './LanguageSelection'
 import Pane from './EditorPane'
 import ActionBar from './ActionBar'
-import throttle from 'froebel/throttle'
 import * as api from 'api/client'
+import throttle from 'froebel/throttle'
 import style from './Editor.module.scss'
+import { groupBy } from 'util/list'
 
 const useOffsetStyles = (paneOffsets: Map<LangCode, number[]>) => {
   const [styleNode] = useState(document.createElement('style'))
@@ -63,19 +64,23 @@ const EditorWrapper: FC<{ textId: string }> = ({ textId }) => {
   const saveChanges = useCallback(
     throttle(
       async () => {
-        let updates: any[] = []
+        let changes: Change[] = []
 
         setDiffs(diffs => {
-          updates = diffs
+          changes = diffs
           return []
         })
 
-        if (!updates.length) return
+        if (!changes.length) return
 
         const saveId = Symbol()
         setSaving(ids => [...ids, saveId])
+        const accumulated = accumulateChanges(changes)
 
-        await api.mutate.updateText({ textId, updates })
+        if (accumulated.length) {
+          await api.mutate.updateText({ textId, updates: accumulated as any })
+        }
+
         setSaving(ids => ids.filter(id => id !== saveId))
       },
       2000,
@@ -123,4 +128,27 @@ export default EditorWrapper
 const move = <T,>(list: T[], from: number, to: number): T[] => {
   const tmp = [...list.slice(0, from), ...list.slice(from + 1)]
   return [...tmp.slice(0, to), list[from], ...tmp.slice(to)]
+}
+
+const accumulateChanges = (changes: Change[]): Change[] => {
+  const handleLanguage = (changes: Change[]) => {
+    let title: string | null = null
+    let accumulated = [...changes]
+
+    for (const change of accumulated) {
+      if (change.title === undefined) continue
+      title = change.title
+      delete change.title
+    }
+
+    accumulated = accumulated.filter(change => change.title !== undefined)
+
+    if (title !== null) {
+      accumulated.push({ language: changes[0].language, title })
+    }
+
+    return accumulated
+  }
+
+  return groupBy(changes, 'language').map(handleLanguage).flat()
 }

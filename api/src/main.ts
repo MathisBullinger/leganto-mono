@@ -89,6 +89,9 @@ const resolve = async (
         res.setHeader(name, value)
       }
     }
+
+    result.errors?.forEach(error => console.log('gql error:', error))
+
     res.setHeader('Content-Type', 'application/json')
     return res.status(200).send(JSON.stringify(result))
   } catch (e) {

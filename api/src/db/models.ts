@@ -44,9 +44,16 @@ export class Story extends Model {
   static tableName = 'story'
   static idColumn = 'id'
 
+  public id!: string
+  public author?: string
+  public isDraft!: string
+  public revises?: string
+  public created!: Date
+  public updated!: Date
+
   static get relationMappings() {
     return {
-      author: {
+      author_: {
         relation: Model.HasOneRelation,
         modelClass: User,
         join: {
@@ -54,7 +61,7 @@ export class Story extends Model {
           to: 'user.id',
         },
       },
-      revises: {
+      revises_: {
         relation: Model.HasOneRelation,
         modelClass: Story,
         join: {
@@ -62,7 +69,7 @@ export class Story extends Model {
           to: 'story.id',
         },
       },
-      translations: {
+      translations_: {
         relation: Model.HasManyRelation,
         modelClass: Translation,
         join: {
@@ -78,9 +85,14 @@ export class Translation extends Model {
   static tableName = 'translation'
   static idColumn = ['story', 'language']
 
+  public story!: string
+  public language!: string
+  public title?: string
+  public content?: string
+
   static get relationMappings() {
     return {
-      story: {
+      story_: {
         relation: Model.HasOneRelation,
         modelClass: Story,
         join: {
