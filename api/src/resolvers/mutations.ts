@@ -5,6 +5,7 @@ import { generateId } from '../util/id'
 import pick from 'froebel/pick'
 import * as jwt from '../util/jwt'
 import { PublicError } from '~/util/error'
+import * as resolver from './typeResolvers'
 
 export const mutations: Mutations = {
   async signInGoogle({ code, redirect }, context) {
@@ -40,7 +41,7 @@ export const mutations: Mutations = {
     return pick(user, 'id', 'name')
   },
 
-  signOut(_, context) {
+  signOut: (_, context) => {
     context.addHeader(
       'Set-Cookie',
       `auth=deleted; expires=${new Date(0).toUTCString()}`
@@ -49,7 +50,7 @@ export const mutations: Mutations = {
     return 0
   },
 
-  async createText(_, context) {
+  createText: async (_, context) => {
     const userId = context.assertSignedIn()
     const id = generateId(16)
     const text = { id, author: userId, isDraft: true }
@@ -58,7 +59,7 @@ export const mutations: Mutations = {
     return { id }
   },
 
-  async updateText({ textId, updates }, context) {
+  updateText: async ({ textId, updates }, context) => {
     context.assertSignedIn()
 
     const story = await db.Story.query().findById(textId)
@@ -101,6 +102,6 @@ export const mutations: Mutations = {
       await db.Story.query().patch({ updated: new Date() }).findById(story.id)
     }
 
-    return { id: textId }
+    return new resolver.Text(textId) as any
   },
 }

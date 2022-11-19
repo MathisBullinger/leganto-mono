@@ -5,7 +5,7 @@ export async function up(knex: Knex): Promise<void> {
     table.text('id').primary()
     table.text('author').references('user.id')
     table.boolean('isDraft').notNullable().defaultTo(false)
-    table.text('revises').references('story.id')
+    table.text('revises').references('story.id').unique().onDelete('CASCADE')
     table.timestamp('created').notNullable().defaultTo(knex.fn.now())
     table.timestamp('updated').notNullable().defaultTo(knex.fn.now())
   })
@@ -27,7 +27,7 @@ export async function up(knex: Knex): Promise<void> {
 }
 
 export async function down(knex: Knex): Promise<void> {
-  await knex.schema.dropTable('story')
   await knex.schema.dropTable('translation')
   await knex.schema.raw('DROP TYPE language')
+  await knex.schema.dropTable('story')
 }

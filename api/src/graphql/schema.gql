@@ -5,6 +5,7 @@ schema {
 
 type Query {
   me: Person
+  draft(textId: ID!): Text
 }
 
 type Mutation {
@@ -21,7 +22,7 @@ type Person {
 
 type Text {
   id: ID!
-  translations(languages: [Language!]!): [Translation!]!
+  translations(languages: [Language!]): [Translation!]!
 }
 
 type Translation {

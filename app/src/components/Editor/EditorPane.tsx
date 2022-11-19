@@ -19,12 +19,14 @@ type Props = {
   highlighted: boolean
   onUpdateSize: (sizes: number[]) => void
   onUpdateTitle: (title: string) => void
+  initial: { title?: string }
 }
 
 const EditorPane: FC<Props> = ({
   highlighted,
   onUpdateSize,
   onUpdateTitle,
+  initial,
 }) => {
   const editor = useEditor({
     extensions: [
@@ -48,7 +50,7 @@ const EditorPane: FC<Props> = ({
     injectCSS: false,
   })
 
-  const [title, setTitle] = useState('')
+  const [title, setTitle] = useState(initial.title ?? '')
 
   return (
     <div className={cn(style.pane, { [style.highlighted]: highlighted })}>

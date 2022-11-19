@@ -51,8 +51,40 @@ const useOffsetStyles = (paneOffsets: Map<LangCode, number[]>) => {
 }
 
 type Change = { language: LangCode; title?: string }
+type RemoteData = { [K in LangCode]?: { title: string } }
 
-const EditorWrapper: FC<{ textId: string }> = ({ textId }) => {
+const EditorLoader: FC<{ textId: string }> = ({ textId }) => {
+  const [data, setData] = useState<RemoteData>()
+
+  useEffect(() => {
+    const fetchEdit = async () => {
+      const result = await api.query.getDraft({
+        textId,
+        languages: ['en', 'es'] as any,
+      })
+
+      if (!result.draft) return
+
+      const data = result.draft.translations.reduce(
+        (acc, cur) => ({ ...acc, [cur.language]: cur }),
+        {}
+      )
+      setData(data)
+    }
+    fetchEdit()
+  }, [textId])
+
+  if (!data) return null
+
+  return <EditorWrapper textId={textId} initial={data} />
+}
+
+export default EditorLoader
+
+const EditorWrapper: FC<{ textId: string; initial: RemoteData }> = ({
+  textId,
+  initial,
+}) => {
   const [languages, setLanguages] = useState<LangCode[]>(['en', 'es'])
   const [highlighted, setHighlighted] = useState<LangCode | null>(null)
   const [nodeSizes, setNodeSizes] = useState(new Map<LangCode, number[]>())
@@ -116,14 +148,13 @@ const EditorWrapper: FC<{ textId: string }> = ({ textId }) => {
           onUpdateTitle={title =>
             setDiffs(diffs => [...diffs, { language: lang, title }])
           }
+          initial={initial?.[lang] ?? {}}
         />
       ))}
       <ActionBar isSaving={saving.length + diffs.length > 0} />
     </div>
   )
 }
-
-export default EditorWrapper
 
 const move = <T,>(list: T[], from: number, to: number): T[] => {
   const tmp = [...list.slice(0, from), ...list.slice(from + 1)]

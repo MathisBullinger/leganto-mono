@@ -1,0 +1,9 @@
+query GetDraft($textId: ID!, $languages: [Language!]) {
+  draft(textId: $textId) {
+    id
+    translations(languages: $languages) {
+      language
+      title
+    }
+  }
+}

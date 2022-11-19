@@ -82,7 +82,10 @@ const resolve = async (
       contextValue: context,
       source: gqlRequest.query,
       operationName: gqlRequest.operationName,
-      variableValues: gqlRequest.variables,
+      variableValues:
+        typeof gqlRequest.variables === 'string'
+          ? JSON.parse(gqlRequest.variables)
+          : gqlRequest.variables,
     })
     for (const [name, values] of context.headers) {
       for (const value of values) {
