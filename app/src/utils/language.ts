@@ -1,6 +1,7 @@
 import partition from 'froebel/partition'
 
-export const knownCodes = ['de', 'en', 'es'] as const
+export const knownCodes = ['de', 'en', 'es', 'fr', 'it', 'pt', 'nl'] as const
+
 export type LangCode = typeof knownCodes[number]
 
 export const filterCodes = (codes: string[]) =>

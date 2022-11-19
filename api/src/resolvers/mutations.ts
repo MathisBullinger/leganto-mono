@@ -48,5 +48,20 @@ export const mutations: Mutations = {
     return 0
   },
 
-  createText: () => ({ id: generateId(16) }),
+  async createText(_, context) {
+    context.assertSignedIn('create a story')
+
+    const id = generateId(16)
+    await db.Story.query().insert({ id, author: context.userId, isDraft: true })
+
+    return { id }
+  },
+
+  async updateText({ textId, updates }, context) {
+    context.assertSignedIn()
+
+    console.log('update', ...updates)
+
+    return { id: textId }
+  },
 }

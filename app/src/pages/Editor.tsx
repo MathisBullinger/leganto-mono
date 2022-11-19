@@ -10,7 +10,7 @@ const Editor: VFC<RouteProps> = ({ match: { id } }) => {
       <Helmet>
         <title>Edit | Leganto</title>
       </Helmet>
-      <EditorView />
+      <EditorView textId={id} />
     </div>
   )
 }

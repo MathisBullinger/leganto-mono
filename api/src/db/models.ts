@@ -39,3 +39,55 @@ export class SigninGoogle extends Model {
     },
   }
 }
+
+export class Story extends Model {
+  static tableName = 'story'
+  static idColumn = 'id'
+
+  static get relationMappings() {
+    return {
+      author: {
+        relation: Model.HasOneRelation,
+        modelClass: User,
+        join: {
+          from: 'story.author',
+          to: 'user.id',
+        },
+      },
+      revises: {
+        relation: Model.HasOneRelation,
+        modelClass: Story,
+        join: {
+          from: 'story.revises',
+          to: 'story.id',
+        },
+      },
+      translations: {
+        relation: Model.HasManyRelation,
+        modelClass: Translation,
+        join: {
+          from: 'story.id',
+          to: 'translation.story',
+        },
+      },
+    }
+  }
+}
+
+export class Translation extends Model {
+  static tableName = 'translation'
+  static idColumn = ['story', 'language']
+
+  static get relationMappings() {
+    return {
+      story: {
+        relation: Model.HasOneRelation,
+        modelClass: Story,
+        join: {
+          from: 'translation.story',
+          to: 'story.id',
+        },
+      },
+    }
+  }
+}

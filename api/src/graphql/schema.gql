@@ -11,13 +11,36 @@ type Mutation {
   signInGoogle(code: ID!, redirect: String!): Person
   signOut: Int
   createText: Text!
+  updateText(textId: ID!, updates: [TextDiff!]!): Text!
 }
 
 type Person {
-  id: String!
+  id: ID!
   name: String!
 }
 
 type Text {
-  id: String!
+  id: ID!
+  translations(languages: [Language!]!): [Translation!]!
+}
+
+type Translation {
+  language: Language!
+  title: String
+  content: String
+}
+
+input TextDiff {
+  language: Language!
+  title: String
+}
+
+enum Language {
+  de
+  en
+  es
+  fr
+  it
+  nl
+  pt
 }

@@ -1,0 +1,25 @@
+.actionBar {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  bottom: 1rem;
+  left: 50vw;
+  transform: translateX(-50%);
+  font-family: var(font-ui);
+  // background: #f004;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  svg {
+    width: .8rem;
+    height: .8rem;
+  }
+
+  span {
+    font-size: 12px;
+  }
+}

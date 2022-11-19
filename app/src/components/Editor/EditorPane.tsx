@@ -11,15 +11,21 @@ import Heading from '@tiptap/extension-heading'
 import History from '@tiptap/extension-history'
 import Textarea from 'components/Textarea'
 import type { LangCode } from 'utils/language'
+import bundle from 'froebel/bundle'
 import style from './EditorPane.module.scss'
 
 type Props = {
   language: LangCode
   highlighted: boolean
   onUpdateSize: (sizes: number[]) => void
+  onUpdateTitle: (title: string) => void
 }
 
-const EditorPane: FC<Props> = ({ highlighted, onUpdateSize }) => {
+const EditorPane: FC<Props> = ({
+  highlighted,
+  onUpdateSize,
+  onUpdateTitle,
+}) => {
   const editor = useEditor({
     extensions: [
       Document,
@@ -48,7 +54,7 @@ const EditorPane: FC<Props> = ({ highlighted, onUpdateSize }) => {
     <div className={cn(style.pane, { [style.highlighted]: highlighted })}>
       <Textarea
         value={title}
-        onChange={setTitle}
+        onChange={bundle(setTitle, onUpdateTitle)}
         placeholder="Title"
         className={style.title}
       />

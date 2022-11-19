@@ -1,9 +1,12 @@
-import { FC, useState } from 'react'
+import { FC, useState, useCallback } from 'react'
 import { createPortal, useEffect } from 'preact/compat'
 import cn from 'util/css'
 import type { LangCode } from 'utils/language'
 import LanguageSelect from './LanguageSelection'
 import Pane from './EditorPane'
+import ActionBar from './ActionBar'
+import throttle from 'froebel/throttle'
+import * as api from 'api/client'
 import style from './Editor.module.scss'
 
 const useOffsetStyles = (paneOffsets: Map<LangCode, number[]>) => {
@@ -46,12 +49,42 @@ const useOffsetStyles = (paneOffsets: Map<LangCode, number[]>) => {
   }, [paneOffsets, styleNode])
 }
 
-const EditorWrapper: FC = () => {
+type Change = { language: LangCode; title?: string }
+
+const EditorWrapper: FC<{ textId: string }> = ({ textId }) => {
   const [languages, setLanguages] = useState<LangCode[]>(['en', 'es'])
   const [highlighted, setHighlighted] = useState<LangCode | null>(null)
   const [nodeSizes, setNodeSizes] = useState(new Map<LangCode, number[]>())
+  const [diffs, setDiffs] = useState<Change[]>([])
+  const [saving, setSaving] = useState<symbol[]>([])
 
   useOffsetStyles(nodeSizes)
+
+  const saveChanges = useCallback(
+    throttle(
+      async () => {
+        let updates: any[] = []
+
+        setDiffs(diffs => {
+          updates = diffs
+          return []
+        })
+
+        if (!updates.length) return
+
+        const saveId = Symbol()
+        setSaving(ids => [...ids, saveId])
+
+        await api.mutate.updateText({ textId, updates })
+        setSaving(ids => ids.filter(id => id !== saveId))
+      },
+      2000,
+      { leading: false, trailing: true }
+    ),
+    [textId]
+  )
+
+  useEffect(saveChanges, [saveChanges, diffs])
 
   return (
     <div className={cn(style.wrapper, { [style.highlight]: highlighted })}>
@@ -75,8 +108,12 @@ const EditorWrapper: FC = () => {
               nodeSizes => new Map([...nodeSizes.entries(), [lang, sizes]])
             )
           }
+          onUpdateTitle={title =>
+            setDiffs(diffs => [...diffs, { language: lang, title }])
+          }
         />
       ))}
+      <ActionBar isSaving={saving.length + diffs.length > 0} />
     </div>
   )
 }

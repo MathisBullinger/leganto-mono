@@ -1,0 +1,5 @@
+mutation UpdateText($textId: ID!, $updates: [TextDiff!]!) {
+  updateText(textId: $textId, updates: $updates) {
+    id
+  }
+}

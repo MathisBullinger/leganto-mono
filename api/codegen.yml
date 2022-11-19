@@ -5,9 +5,11 @@ generates:
       - typescript
       - typescript-resolvers
     config:
+      namingConvention:
+        enumValues: keep
       customResolverFn: |
         (
           args: TArgs,
           context: TContext,
           info: GraphQLResolveInfo
-        ) => Promise<TResult> | TResult;
+        ) => Promise<Partial<TResult>> | Partial<TResult>;
