@@ -38,6 +38,7 @@ const SignedIn: VFC<{ user: Exclude<Context['user'], undefined> }> = ({
       onKeyDown={({ key, target }) => {
         if (key === 'Escape') (target as HTMLElement).blur()
       }}
+      link={`/profile/${user.id}`}
     >
       {user.name}
       {<Dropdown />}

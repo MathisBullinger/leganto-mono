@@ -1,0 +1,13 @@
+query GetProfile($userId: ID!, $lang: Language!) {
+  user(userId: $userId) {
+    id
+    name
+    drafts {
+      id
+      translations(languages: [$lang]) {
+        language
+        title
+      }
+    }
+  }
+}

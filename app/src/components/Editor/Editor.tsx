@@ -109,6 +109,8 @@ const EditorWrapper: FC<{ textId: string; initial: RemoteData }> = ({
         setSaving(ids => [...ids, saveId])
         const accumulated = accumulateChanges(changes)
 
+        console.log(accumulated)
+
         if (accumulated.length) {
           await api.mutate.updateText({ textId, updates: accumulated as any })
         }
