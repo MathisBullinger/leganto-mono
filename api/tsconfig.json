@@ -4,6 +4,7 @@
     "baseUrl": ".",
     "skipLibCheck": true,
     "types": ["node"],
+    "experimentalDecorators": true,
     "resolveJsonModule": true,
     "allowJs": true,
     "paths": {

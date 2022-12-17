@@ -1,5 +1,5 @@
 import * as db from '~/db'
-import { Translation } from './Translation'
+import { Translation } from './translation'
 import type { TextTranslationsArgs } from '~/graphql/types'
 
 export class Text {

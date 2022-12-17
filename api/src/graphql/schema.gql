@@ -5,6 +5,7 @@ schema {
 
 type Query {
   me: Person
+  user(userId: ID!): Person
   draft(textId: ID!): Text
 }
 
@@ -18,6 +19,7 @@ type Mutation {
 type Person {
   id: ID!
   name: String!
+  drafts: [Text!]
 }
 
 type Text {

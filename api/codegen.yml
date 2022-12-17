@@ -12,4 +12,4 @@ generates:
           args: TArgs,
           context: TContext,
           info: GraphQLResolveInfo
-        ) => Promise<Partial<TResult>> | Partial<TResult>;
+        ) => ResolverResult<TResult>

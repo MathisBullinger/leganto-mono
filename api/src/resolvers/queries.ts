@@ -3,10 +3,13 @@ import * as db from '../db'
 import * as resolver from './typeResolvers'
 
 export const queries: Queries = {
-  me: async (_, { userId }) => {
-    if (!userId) return null
-    return (await db.User.query().findById(userId)) as any
+  me: async (_, context) => {
+    if (!context.userId) return null
+
+    return await resolver.Person.fetch(context, context.userId)
   },
+  user: async ({ userId }, context) =>
+    await resolver.Person.fetch(context, userId),
   draft: async ({ textId }) => {
     const story =
       (await db.Story.query().where('revises', textId).limit(1).first()) ??

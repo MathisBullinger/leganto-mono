@@ -1,2 +1,3 @@
-export * from './Text'
-export * from './Translation'
+export * from './text'
+export * from './translation'
+export * from './person'

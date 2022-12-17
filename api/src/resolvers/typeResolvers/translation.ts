@@ -1,4 +1,5 @@
 import * as db from '~/db'
+import type { RequireFields } from '~/util/types'
 
 export class Translation {
   public readonly story: string
@@ -15,7 +16,3 @@ export class Translation {
 }
 
 type TranslationData = RequireFields<db.Translation, 'story' | 'language'>
-
-type RequireFields<T, K extends keyof T> = Partial<Omit<T, K>> & {
-  [F in K]-?: T[F]
-}
