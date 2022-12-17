@@ -84,21 +84,43 @@ export const mutations: Mutations = {
       )
     }
 
-    const updatedTitles = new Map<string, string>()
+    const updatesByLang = new Map<
+      string,
+      { title?: string; content?: string }
+    >()
 
     for (const update of updates) {
+      if (
+        typeof update.title !== 'string' &&
+        typeof update.content !== 'string'
+      )
+        continue
+
+      if (!updatesByLang.has(update.language)) {
+        updatesByLang.set(update.language, {})
+      }
+
+      const diff = updatesByLang.get(update.language)!
+
       if (typeof update.title === 'string') {
-        updatedTitles.set(update.language, update.title)
+        diff.title = update.title
+      }
+
+      if (typeof update.content === 'string') {
+        diff.content = update.content
       }
     }
 
     await Promise.all(
-      [...updatedTitles].map(([language, title]) =>
-        db.Translation.query().patch({ title }).findById([story.id, language])
+      [...updatesByLang].map(
+        ([language, diff]) => (
+          console.log({ language, diff }),
+          db.Translation.query().patch(diff).findById([story.id, language])
+        )
       )
     )
 
-    if (newLanguages.length || updatedTitles.size) {
+    if (newLanguages.length || updatesByLang.size) {
       await db.Story.query().patch({ updated: new Date() }).findById(story.id)
     }
 

@@ -3,7 +3,7 @@ import Button from 'components/Button'
 import Icon from 'components/Icon'
 import Dropdown from './Dropdown'
 import { useContext, Context } from 'context/app'
-import { useLocation } from 'itinero'
+import { useLocation, Link } from 'itinero'
 import * as signIn from 'util/signIn'
 import cn from 'util/css'
 import style from './Topnav.module.scss'
@@ -38,9 +38,8 @@ const SignedIn: VFC<{ user: Exclude<Context['user'], undefined> }> = ({
       onKeyDown={({ key, target }) => {
         if (key === 'Escape') (target as HTMLElement).blur()
       }}
-      link={`/profile/${user.id}`}
     >
-      {user.name}
+      <Link to={`/profile/${user.id}`}>{user.name}</Link>
       {<Dropdown />}
     </Button>
   )

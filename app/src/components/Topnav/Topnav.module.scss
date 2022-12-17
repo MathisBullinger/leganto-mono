@@ -66,6 +66,11 @@
   &:not(:hover, :focus-within) .dropdown {
     @include visually-hidden;
   }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 }
 
 .loading {

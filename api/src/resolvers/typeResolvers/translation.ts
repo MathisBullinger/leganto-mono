@@ -13,6 +13,10 @@ export class Translation {
   title() {
     return this.data.title ?? 'Untitled Text'
   }
+
+  content() {
+    return this.data.content ?? ''
+  }
 }
 
 type TranslationData = RequireFields<db.Translation, 'story' | 'language'>

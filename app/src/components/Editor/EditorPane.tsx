@@ -19,13 +19,15 @@ type Props = {
   highlighted: boolean
   onUpdateSize: (sizes: number[]) => void
   onUpdateTitle: (title: string) => void
-  initial: { title?: string }
+  onUpdateContent: (content: string) => void
+  initial: { title?: string; content?: string }
 }
 
 const EditorPane: FC<Props> = ({
   highlighted,
   onUpdateSize,
   onUpdateTitle,
+  onUpdateContent,
   initial,
 }) => {
   const editor = useEditor({
@@ -39,13 +41,14 @@ const EditorPane: FC<Props> = ({
       Heading.configure({ levels: [1, 2] }),
       History,
     ],
-    content: '',
+    content: initial.content,
     onUpdate: ({ editor }) => {
       const sizes = [...editor.view.dom.children]
         .filter((node): node is HTMLElement => node instanceof HTMLElement)
         .map(node => node.offsetHeight)
 
       onUpdateSize(sizes)
+      onUpdateContent(editor.getHTML())
     },
     injectCSS: false,
   })

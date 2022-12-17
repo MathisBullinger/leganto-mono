@@ -6,7 +6,7 @@ import LanguageSelect from './LanguageSelection'
 import Pane from './EditorPane'
 import ActionBar from './ActionBar'
 import * as api from 'api/client'
-import throttle from 'froebel/throttle'
+import debounce from 'froebel/debounce'
 import style from './Editor.module.scss'
 import { groupBy } from 'util/list'
 
@@ -50,8 +50,8 @@ const useOffsetStyles = (paneOffsets: Map<LangCode, number[]>) => {
   }, [paneOffsets, styleNode])
 }
 
-type Change = { language: LangCode; title?: string }
-type RemoteData = { [K in LangCode]?: { title: string } }
+type Change = { language: LangCode; title?: string; content?: string }
+type RemoteData = { [K in LangCode]?: { title: string; content: string } }
 
 const EditorLoader: FC<{ textId: string }> = ({ textId }) => {
   const [data, setData] = useState<RemoteData>()
@@ -94,32 +94,26 @@ const EditorWrapper: FC<{ textId: string; initial: RemoteData }> = ({
   useOffsetStyles(nodeSizes)
 
   const saveChanges = useCallback(
-    throttle(
-      async () => {
-        let changes: Change[] = []
+    debounce(async () => {
+      let changes: Change[] = []
 
-        setDiffs(diffs => {
-          changes = diffs
-          return []
-        })
+      setDiffs(diffs => {
+        changes = diffs
+        return []
+      })
 
-        if (!changes.length) return
+      if (!changes.length) return
 
-        const saveId = Symbol()
-        setSaving(ids => [...ids, saveId])
-        const accumulated = accumulateChanges(changes)
+      const saveId = Symbol()
+      setSaving(ids => [...ids, saveId])
+      const accumulated = accumulateChanges(changes)
 
-        console.log(accumulated)
+      if (accumulated.length) {
+        await api.mutate.updateText({ textId, updates: accumulated as any })
+      }
 
-        if (accumulated.length) {
-          await api.mutate.updateText({ textId, updates: accumulated as any })
-        }
-
-        setSaving(ids => ids.filter(id => id !== saveId))
-      },
-      2000,
-      { leading: false, trailing: true }
-    ),
+      setSaving(ids => ids.filter(id => id !== saveId))
+    }, 1000),
     [textId]
   )
 
@@ -150,6 +144,9 @@ const EditorWrapper: FC<{ textId: string; initial: RemoteData }> = ({
           onUpdateTitle={title =>
             setDiffs(diffs => [...diffs, { language: lang, title }])
           }
+          onUpdateContent={content =>
+            setDiffs(diffs => [...diffs, { language: lang, content }])
+          }
           initial={initial?.[lang] ?? {}}
         />
       ))}
@@ -166,18 +163,30 @@ const move = <T,>(list: T[], from: number, to: number): T[] => {
 const accumulateChanges = (changes: Change[]): Change[] => {
   const handleLanguage = (changes: Change[]) => {
     let title: string | null = null
+    let content: string | null = null
     let accumulated = [...changes]
 
     for (const change of accumulated) {
-      if (change.title === undefined) continue
-      title = change.title
-      delete change.title
+      if (change.title !== undefined) {
+        title = change.title
+        delete change.title
+      }
+      if (change.content !== undefined) {
+        content = change.content
+        delete change.content
+      }
     }
 
-    accumulated = accumulated.filter(change => change.title !== undefined)
+    accumulated = accumulated.filter(
+      change => change.title !== undefined || change.content !== undefined
+    )
 
     if (title !== null) {
       accumulated.push({ language: changes[0].language, title })
+    }
+
+    if (content !== null) {
+      accumulated.push({ language: changes[0].language, content })
     }
 
     return accumulated

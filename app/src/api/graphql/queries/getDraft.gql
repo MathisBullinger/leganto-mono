@@ -4,6 +4,7 @@ query GetDraft($textId: ID!, $languages: [Language!]) {
     translations(languages: $languages) {
       language
       title
+      content
     }
   }
 }

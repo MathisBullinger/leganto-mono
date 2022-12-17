@@ -36,6 +36,7 @@ type Translation {
 input TextDiff {
   language: Language!
   title: String
+  content: String
 }
 
 enum Language {
