@@ -29,6 +29,42 @@
     line-height: 1.4;
     border-bottom: 1px solid #000;
   }
+
+  :global(.ProseMirror) {
+    display: grid;
+    grid-auto-rows: min-content;
+    grid-template-rows: var(--rows);
+    // text-indent: 1ch;
+    gap: 0.5em;
+
+    > * {
+      margin: 0;
+      justify-self: start;
+      height: min-content;
+      width: 100%;
+    }
+
+    > *:nth-of-type(3n + 1) {
+      background: #f001;
+    }
+
+    > *:nth-of-type(3n + 2) {
+      background: #0f01;
+    }
+
+    > *:nth-of-type(3n + 3) {
+      background: #00f1;
+    }
+
+    // br {
+    //   display: block;
+    //   width: 100%;
+    //   margin: 0.1em 0;
+    //   height: 1em;
+    //   border: 1px dotted #f00;
+    //   content: '';
+    // }
+  }
 }
 
 .highlighted {

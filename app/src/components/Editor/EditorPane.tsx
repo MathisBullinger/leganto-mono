@@ -1,4 +1,11 @@
-import { FC, useState } from 'react'
+import {
+  FC,
+  useState,
+  ForwardRefRenderFunction,
+  forwardRef,
+  useRef,
+  useCallback,
+} from 'react'
 import cn from 'util/css'
 import { useEditor, EditorContent } from '@tiptap/react'
 import Document from '@tiptap/extension-document'
@@ -13,23 +20,63 @@ import Textarea from 'components/Textarea'
 import type { LangCode } from 'utils/language'
 import bundle from 'froebel/bundle'
 import style from './EditorPane.module.scss'
+import { useEffect } from 'preact/hooks'
 
 type Props = {
   language: LangCode
   highlighted: boolean
-  onUpdateSize: (sizes: number[]) => void
   onUpdateTitle: (title: string) => void
   onUpdateContent: (content: string) => void
   initial: { title?: string; content?: string }
+  onContainer?: (container: HTMLElement | null) => void
 }
 
 const EditorPane: FC<Props> = ({
   highlighted,
-  onUpdateSize,
   onUpdateTitle,
   onUpdateContent,
   initial,
+  onContainer,
 }) => {
+  const setContainerRef = useRef(onContainer)
+  setContainerRef.current = onContainer
+  const setContainer = useCallback(
+    (el: HTMLElement | null) => setContainerRef.current?.(el),
+    []
+  )
+
+  const [title, setTitle] = useState(initial.title ?? '')
+
+  console.log('render pane')
+
+  useEffect(() => {
+    return () => setContainer(null)
+  }, [setContainer])
+
+  return (
+    <div className={cn(style.pane, { [style.highlighted]: highlighted })}>
+      <Textarea
+        value={title}
+        onChange={bundle(setTitle, onUpdateTitle)}
+        placeholder="Title"
+        className={style.title}
+      />
+      <EditorBody
+        initial={initial}
+        onUpdateContent={onUpdateContent}
+        onContainer={setContainer}
+      />
+    </div>
+  )
+}
+
+export default EditorPane
+
+const EditorBody: FC<
+  Pick<Props, 'initial' | 'onUpdateContent' | 'onContainer'>
+> = ({ initial, onUpdateContent, onContainer }) => {
+  const containerRef = useRef<HTMLDivElement | null>(null)
+
   const editor = useEditor({
     extensions: [
       Document,
@@ -43,29 +90,26 @@ const EditorPane: FC<Props> = ({
     ],
     content: initial.content,
     onUpdate: ({ editor }) => {
-      const sizes = [...editor.view.dom.children]
-        .filter((node): node is HTMLElement => node instanceof HTMLElement)
-        .map(node => node.offsetHeight)
-
-      onUpdateSize(sizes)
       onUpdateContent(editor.getHTML())
     },
     injectCSS: false,
   })
 
-  const [title, setTitle] = useState(initial.title ?? '')
-
   return (
-    <div className={cn(style.pane, { [style.highlighted]: highlighted })}>
-      <Textarea
-        value={title}
-        onChange={bundle(setTitle, onUpdateTitle)}
-        placeholder="Title"
-        className={style.title}
-      />
-      <EditorContent editor={editor} lang="en" />
-    </div>
+    <EditorContent
+      editor={editor}
+      lang="en"
+      ref={ref => {
+        const container =
+          (
+            ref?.editorContentRef.current as HTMLElement
+          )?.querySelector<HTMLDivElement>('.ProseMirror') ?? null
+
+        if (!ref || container === containerRef.current) return
+        containerRef.current = container
+
+        onContainer?.(container)
+      }}
+    />
   )
 }
-
-export default EditorPane

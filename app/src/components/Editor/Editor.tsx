@@ -1,5 +1,5 @@
-import { FC, useState, useCallback } from 'react'
-import { createPortal, useEffect } from 'preact/compat'
+import { FC, useState, useEffect, useCallback, CSSProperties } from 'react'
+import { createPortal } from 'preact/compat'
 import cn from 'util/css'
 import type { LangCode } from 'utils/language'
 import LanguageSelect from './LanguageSelection'
@@ -9,46 +9,7 @@ import * as api from 'api/client'
 import debounce from 'froebel/debounce'
 import style from './Editor.module.scss'
 import { groupBy } from 'util/list'
-
-const useOffsetStyles = (paneOffsets: Map<LangCode, number[]>) => {
-  const [styleNode] = useState(document.createElement('style'))
-
-  useEffect(() => {
-    document.body.appendChild(styleNode)
-
-    return () => styleNode.remove()
-  }, [styleNode])
-
-  useEffect(() => {
-    const offsets = [...paneOffsets.values()]
-    const maxNodes = Math.max(...offsets.map(({ length }) => length))
-
-    while (styleNode.sheet?.cssRules.length) styleNode.sheet.deleteRule(0)
-
-    if (offsets.length < 2 || !styleNode.sheet) return
-
-    for (let i = 0; i < offsets.length; i++) {
-      const offs = Array(offsets[i].length).fill(0)
-
-      for (let j = 0; j < maxNodes; j++) {
-        const rowHeight = Math.max(...offsets.map(pane => pane[j] ?? 0))
-        for (let k = j + 1; k < offs.length; k++) {
-          offs[k] += rowHeight - offsets[i][j]
-        }
-      }
-
-      for (let j = 0; j < offs.length; j++) {
-        const rule = `.${style.wrapper} > *:nth-child(${
-          i + 1
-        }) .ProseMirror > *:nth-child(${j + 1}) { transform: translateY(${
-          offs[j]
-        }px); }`
-
-        styleNode.sheet.insertRule(rule)
-      }
-    }
-  }, [paneOffsets, styleNode])
-}
+import { useEditorGrid } from './hooks/useEditorGrid'
 
 type Change = { language: LangCode; title?: string; content?: string }
 type RemoteData = { [K in LangCode]?: { title: string; content: string } }
@@ -87,11 +48,49 @@ const EditorWrapper: FC<{ textId: string; initial: RemoteData }> = ({
 }) => {
   const [languages, setLanguages] = useState<LangCode[]>(['en', 'es'])
   const [highlighted, setHighlighted] = useState<LangCode | null>(null)
-  const [nodeSizes, setNodeSizes] = useState(new Map<LangCode, number[]>())
+
+  const [editorPanes, setEditorPanes] = useState<(HTMLElement | null)[]>([])
+  const rows = useEditorGrid(editorPanes.filter(Boolean) as HTMLElement[])
+
+  console.log(rows)
+
+  return (
+    <div
+      className={cn(style.wrapper, { [style.highlight]: highlighted })}
+      style={{ '--rows': rows } as CSSProperties}
+    >
+      {createPortal(
+        <LanguageSelect
+          languages={languages}
+          onHighlight={setHighlighted}
+          onMove={(index, offset) => {
+            setLanguages(move(languages, index, index + offset))
+          }}
+        />,
+        document.getElementById('custom-header-content')!
+      )}
+      <EditorPanes
+        textId={textId}
+        languages={languages}
+        highlighted={highlighted}
+        initial={initial}
+        setPanes={setEditorPanes}
+      />
+    </div>
+  )
+}
+
+const EditorPanes: FC<{
+  textId: string
+  languages: LangCode[]
+  highlighted: LangCode | null
+  initial: RemoteData
+  setPanes: (
+    set: (current: (HTMLElement | null)[]) => (HTMLElement | null)[]
+  ) => void
+}> = ({ textId, languages, highlighted, initial, setPanes }) => {
   const [diffs, setDiffs] = useState<Change[]>([])
   const [saving, setSaving] = useState<symbol[]>([])
-
-  useOffsetStyles(nodeSizes)
 
   const saveChanges = useCallback(
     debounce(async () => {
@@ -99,7 +98,7 @@ const EditorWrapper: FC<{ textId: string; initial: RemoteData }> = ({
 
       setDiffs(diffs => {
         changes = diffs
-        return []
+        return diffs.length ? [] : diffs
       })
 
       if (!changes.length) return
@@ -120,25 +119,17 @@ const EditorWrapper: FC<{ textId: string; initial: RemoteData }> = ({
   useEffect(saveChanges, [saveChanges, diffs])
 
   return (
-    <div className={cn(style.wrapper, { [style.highlight]: highlighted })}>
-      {createPortal(
-        <LanguageSelect
-          languages={languages}
-          onHighlight={setHighlighted}
-          onMove={(index, offset) => {
-            setLanguages(move(languages, index, index + offset))
-          }}
-        />,
-        document.getElementById('custom-header-content')!
-      )}
-      {languages.map(lang => (
+    <>
+      {languages.map((lang, i) => (
         <Pane
           key={lang}
           language={lang}
           highlighted={lang === highlighted}
-          onUpdateSize={sizes =>
-            setNodeSizes(
-              nodeSizes => new Map([...nodeSizes.entries(), [lang, sizes]])
+          onContainer={el =>
+            setPanes(panes =>
+              Array(Math.max(panes.length, i + 1))
+                .fill(null)
+                .map((_, e) => (e === i ? el : panes[e]))
             )
           }
           onUpdateTitle={title =>
@@ -151,7 +142,7 @@ const EditorWrapper: FC<{ textId: string; initial: RemoteData }> = ({
         />
       ))}
       <ActionBar isSaving={saving.length + diffs.length > 0} />
-    </div>
+    </>
   )
 }
 
