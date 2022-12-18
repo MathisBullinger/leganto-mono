@@ -10,6 +10,7 @@ import debounce from 'froebel/debounce'
 import style from './Editor.module.scss'
 import { groupBy } from 'util/list'
 import { useEditorGrid } from './hooks/useEditorGrid'
+import { useRowHighlight } from './hooks/useRowHighlight'
 
 type Change = { language: LangCode; title?: string; content?: string }
 type RemoteData = { [K in LangCode]?: { title: string; content: string } }
@@ -52,8 +53,6 @@ const EditorWrapper: FC<{ textId: string; initial: RemoteData }> = ({
   const [editorPanes, setEditorPanes] = useState<(HTMLElement | null)[]>([])
   const rows = useEditorGrid(editorPanes.filter(Boolean) as HTMLElement[])
 
-  console.log(rows)
-
   return (
     <div
       className={cn(style.wrapper, { [style.highlight]: highlighted })}
@@ -91,6 +90,9 @@ const EditorPanes: FC<{
 }> = ({ textId, languages, highlighted, initial, setPanes }) => {
   const [diffs, setDiffs] = useState<Change[]>([])
   const [saving, setSaving] = useState<symbol[]>([])
+  const [highlightTitle, setHighlightTitle] = useState(false)
+  const [highlightedRow, setHighlightedRow] = useState<number | null>(null)
+  useRowHighlight(highlightedRow)
 
   const saveChanges = useCallback(
     debounce(async () => {
@@ -139,6 +141,9 @@ const EditorPanes: FC<{
             setDiffs(diffs => [...diffs, { language: lang, content }])
           }
           initial={initial?.[lang] ?? {}}
+          onRowHover={setHighlightedRow}
+          highlightTitle={highlightTitle}
+          onHighlightTitle={setHighlightTitle}
         />
       ))}
       <ActionBar isSaving={saving.length + diffs.length > 0} />

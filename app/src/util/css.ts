@@ -5,7 +5,7 @@ const classNames = (
     .flatMap(v =>
       typeof v === 'object' && v !== null
         ? Object.entries(v)
-            .filter(([k, v]) => !!v)
+            .filter(([, v]) => !!v)
             .map(([k]) => k)
         : [v]
     )

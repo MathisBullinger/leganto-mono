@@ -1,11 +1,4 @@
-import {
-  FC,
-  useState,
-  ForwardRefRenderFunction,
-  forwardRef,
-  useRef,
-  useCallback,
-} from 'react'
+import { FC, useState, useRef, useCallback } from 'react'
 import cn from 'util/css'
 import { useEditor, EditorContent } from '@tiptap/react'
 import Document from '@tiptap/extension-document'
@@ -21,6 +14,7 @@ import type { LangCode } from 'utils/language'
 import bundle from 'froebel/bundle'
 import style from './EditorPane.module.scss'
 import { useEffect } from 'preact/hooks'
+import classNames from 'util/css'
 
 type Props = {
   language: LangCode
@@ -29,6 +23,9 @@ type Props = {
   onUpdateContent: (content: string) => void
   initial: { title?: string; content?: string }
   onContainer?: (container: HTMLElement | null) => void
+  onRowHover?: (index: number | null) => void
+  highlightTitle?: boolean
+  onHighlightTitle?: (v: boolean) => void
 }
 
 const EditorPane: FC<Props> = ({
@@ -37,6 +34,9 @@ const EditorPane: FC<Props> = ({
   onUpdateContent,
   initial,
   onContainer,
+  onRowHover,
+  highlightTitle,
+  onHighlightTitle,
 }) => {
   const setContainerRef = useRef(onContainer)
   setContainerRef.current = onContainer
@@ -47,24 +47,30 @@ const EditorPane: FC<Props> = ({
 
   const [title, setTitle] = useState(initial.title ?? '')
 
-  console.log('render pane')
-
   useEffect(() => {
     return () => setContainer(null)
   }, [setContainer])
 
   return (
     <div className={cn(style.pane, { [style.highlighted]: highlighted })}>
-      <Textarea
-        value={title}
-        onChange={bundle(setTitle, onUpdateTitle)}
-        placeholder="Title"
-        className={style.title}
-      />
+      <div
+        className={classNames(style.title, {
+          [style.highlightTitle]: highlightTitle,
+        })}
+      >
+        <Textarea
+          value={title}
+          onChange={bundle(setTitle, onUpdateTitle)}
+          placeholder="Title"
+          onMouseOver={() => onHighlightTitle?.(true)}
+          onMouseOut={() => onHighlightTitle?.(false)}
+        />
+      </div>
       <EditorBody
         initial={initial}
         onUpdateContent={onUpdateContent}
         onContainer={setContainer}
+        onRowHover={onRowHover}
       />
     </div>
   )
@@ -73,8 +79,8 @@ const EditorPane: FC<Props> = ({
 export default EditorPane
 
 const EditorBody: FC<
-  Pick<Props, 'initial' | 'onUpdateContent' | 'onContainer'>
-> = ({ initial, onUpdateContent, onContainer }) => {
+  Pick<Props, 'initial' | 'onUpdateContent' | 'onContainer' | 'onRowHover'>
+> = ({ initial, onUpdateContent, onContainer, onRowHover }) => {
   const containerRef = useRef<HTMLDivElement | null>(null)
 
   const editor = useEditor({
@@ -110,6 +116,16 @@ const EditorBody: FC<
 
         onContainer?.(container)
       }}
+      onMouseOver={({ target }) => {
+        if (target === containerRef.current || !(target instanceof HTMLElement))
+          return
+
+        const index = [...target.parentElement!.children].indexOf(target)
+        if (index < 0) return
+
+        onRowHover?.(index)
+      }}
+      onMouseOut={() => onRowHover?.(null)}
     />
   )
 }
