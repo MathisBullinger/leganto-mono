@@ -1,0 +1,10 @@
+query GetText($textId: ID!, $languages: [Language!]!) {
+  text(textId: $textId) {
+    id
+    translations(languages: $languages) {
+      language
+      title
+      content
+    }
+  }
+}

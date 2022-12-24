@@ -12,4 +12,4 @@ generates:
           args: TArgs,
           context: TContext,
           info: GraphQLResolveInfo
-        ) => ResolverResult<TResult>
+        ) => ResolverResult<TResult> | any

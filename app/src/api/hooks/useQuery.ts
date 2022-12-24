@@ -8,7 +8,7 @@ export const useQuery = <T extends keyof Query>(
   ...[variables]: Parameters<Query[T]>
 ) => {
   const [data, setData] = useState<QueryResult<T>>()
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     setData(undefined)

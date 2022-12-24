@@ -1,7 +1,7 @@
 import { FC, useState, useEffect, useCallback, CSSProperties } from 'react'
 import { createPortal } from 'preact/compat'
 import cn from 'util/css'
-import type { LangCode } from 'utils/language'
+import type { LangCode } from 'util/language'
 import LanguageSelect from './LanguageSelection'
 import Pane from './EditorPane'
 import ActionBar from './ActionBar'

@@ -1,0 +1,19 @@
+.page {
+  padding: 1rem 2rem;
+}
+
+.textWrapper {
+  display: grid;
+  grid-template-columns: repeat(var(--columns), 1fr);
+  gap: 1rem;
+
+  section {
+    display: contents;
+  }
+
+  section > * {
+    margin: 0;
+    grid-column: calc(var(--column) + 1);
+    grid-row: calc(var(--row) + 1);
+  }
+}

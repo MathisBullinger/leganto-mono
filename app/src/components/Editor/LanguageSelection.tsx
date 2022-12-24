@@ -1,5 +1,5 @@
 import { FC, useState } from 'react'
-import { LangCode, languageName } from 'utils/language'
+import { LangCode, languageName } from 'util/language'
 
 import style from './LanguageSelection.module.scss'
 

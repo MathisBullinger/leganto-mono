@@ -1,0 +1,9 @@
+query ListTexts($languages: [Language!]!) {
+  texts(languages: $languages) {
+    id
+    translations(languages: $languages) {
+      language
+      title
+    }
+  }
+}

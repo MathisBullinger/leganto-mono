@@ -1,0 +1,26 @@
+.page {
+  padding: 1rem 2rem;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  list-style: none;
+  margin: 0;
+
+  li {
+    width: 100%;
+    
+    a {
+      display: flex;
+      text-decoration: none;
+      color: inherit;
+      width: 100%;
+    }
+    
+    a > * {
+      flex: 1 1 0;
+    }
+  }
+}

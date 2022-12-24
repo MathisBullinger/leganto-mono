@@ -9,6 +9,7 @@
   font-family: var(--font-text);
   overflow: hidden;
   white-space: pre-wrap;
+  padding-bottom: 1rem;
 
   > div:not([class]) {
     display: contents;
@@ -53,15 +54,21 @@
     display: grid;
     grid-auto-rows: min-content;
     grid-template-rows: var(--rows);
-    gap: 0.5em;
+    gap: 1em;
 
     > * {
       margin: 0;
       justify-self: start;
       height: min-content;
-      width: 100%;
       position: relative;
       z-index: 1;
+      width: 100%;
+    }
+
+    br {
+      content: '';
+      height: 1em;
+      display: block;
     }
   }
 }

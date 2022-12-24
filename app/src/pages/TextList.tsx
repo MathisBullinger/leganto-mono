@@ -1,8 +1,10 @@
 import type { VFC } from 'react'
-import { Redirect, RouteProps } from 'itinero'
-import { filterCodes, LangCode } from 'utils/language'
+import { Redirect, RouteProps, Link } from 'itinero'
+import { filterCodes, LangCode } from 'util/language'
 import LanguageBar from 'components/LanguageBar'
 import Helmet from 'react-helmet'
+import { useQuery, QueryResult } from 'api/hooks'
+import style from './TextList.module.scss'
 
 type Props = RouteProps<{}, { lang: string }>
 
@@ -36,13 +38,36 @@ function useLanguageCodes(langStr: string): {
 }
 
 const LanguageList: VFC<{ langs: LangCode[] }> = ({ langs }) => {
+  const [data] = useQuery('listTexts', { languages: langs as any })
+
   return (
-    <div>
+    <div className={style.page}>
       <Helmet>
         <title>Leganto - {langs.join(' | ')}</title>
       </Helmet>
-      {langs.join(', ')}
-      <LanguageBar langs={langs} />
+      {data?.texts?.length && <TextList texts={data.texts} langs={langs} />}
+      {/* <LanguageBar langs={langs} /> */}
     </div>
   )
 }
+
+const TextList: VFC<{ texts: Text[]; langs: LangCode[] }> = ({
+  texts,
+  langs,
+}) => {
+  return (
+    <ul className={style.list}>
+      {texts.map(({ id, translations }) => (
+        <li key={id}>
+          <Link to={`/text/${langs.join('/')}/${id}`}>
+            {translations.map(({ language, title }) => (
+              <span key={language}>{title}</span>
+            ))}
+          </Link>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+type Text = QueryResult<'listTexts'>['texts'][number]

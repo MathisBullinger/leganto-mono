@@ -1,5 +1,5 @@
 import type { VFC } from 'react'
-import { LangCode, languageName } from 'utils/language'
+import { LangCode, languageName } from 'util/language'
 
 import style from './LanguageBar.module.css'
 

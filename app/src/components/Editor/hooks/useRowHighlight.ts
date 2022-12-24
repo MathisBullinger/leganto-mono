@@ -23,7 +23,9 @@ export const useRowHighlight = (index: number | null) => {
 const highlightStyle = `
   content: '';
   position: absolute;
+  display: block;
   z-index: -1;
+  pointer-events: none;
   --padd-vert: 0.3em;
   --padd-hori: 0.5em;
   left: calc(var(--padd-hori) * -1);

@@ -10,11 +10,10 @@ import HardBreak from '@tiptap/extension-hard-break'
 import Heading from '@tiptap/extension-heading'
 import History from '@tiptap/extension-history'
 import Textarea from 'components/Textarea'
-import type { LangCode } from 'utils/language'
+import type { LangCode } from 'util/language'
 import bundle from 'froebel/bundle'
 import style from './EditorPane.module.scss'
 import { useEffect } from 'preact/hooks'
-import classNames from 'util/css'
 
 type Props = {
   language: LangCode
@@ -54,7 +53,7 @@ const EditorPane: FC<Props> = ({
   return (
     <div className={cn(style.pane, { [style.highlighted]: highlighted })}>
       <div
-        className={classNames(style.title, {
+        className={cn(style.title, {
           [style.highlightTitle]: highlightTitle,
         })}
       >
