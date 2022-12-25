@@ -1,19 +1,56 @@
-.page {
-  padding: 1rem 2rem;
-}
-
 .textWrapper {
-  display: grid;
-  grid-template-columns: repeat(var(--columns), 1fr);
-  gap: 1rem;
+  @media (orientation: portrait) {
+    height: calc(100vh - var(--topnav-height));
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
 
-  section {
-    display: contents;
+    section {
+      flex: 1 1 0;
+      overflow: auto;
+      position: fixed;
+      --h: calc(100vh - var(--topnav-height));
+      height: calc(var(--h) / var(--tabs));
+      width: 100%;
+      contain: strict;
+      top: calc(var(--topnav-height) + var(--h) / var(--tabs) * var(--tab));
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .content {
+      overflow: auto;
+      padding: 0 1rem;
+    }
+
+    .shadow {
+      visibility: hidden;
+    }
   }
+  
+  @media (orientation: landscape) {
+    display: grid;
+    grid-template-columns: repeat(var(--tabs), 1fr);
+    gap: 1rem;
+    padding: 1rem 2rem;
 
-  section > * {
-    margin: 0;
-    grid-column: calc(var(--column) + 1);
-    grid-row: calc(var(--row) + 1);
+    section {
+      display: contents;
+    }
+
+    .content > * {
+      margin: 0;
+      grid-column: calc(var(--tab) + 1);
+      grid-row: calc(var(--row) + 1);
+    }
+
+    .content {
+      display: contents;
+    }
+    
+    .shadow {
+      display: none;
+    }
   }
 }
+
