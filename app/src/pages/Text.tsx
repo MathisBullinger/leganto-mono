@@ -36,6 +36,7 @@ export default TextWrapper
 const TextView: VFC<Text> = ({ translations }) => {
   const [paneHeights, setPaneHeights] = useState<Record<string, number>>({})
   const textHeight = Math.max(...Object.values(paneHeights))
+  const container = useRef<HTMLElement>(null)
 
   const sections = useMemo(
     () =>
@@ -50,23 +51,33 @@ const TextView: VFC<Text> = ({ translations }) => {
     [translations]
   )
 
+  useEffect(() => {
+    const onScroll = () => {
+      if (!container.current) return
+
+      const dy =
+        window.scrollY / (document.body.scrollHeight - window.innerHeight)
+
+      const panes = ([...container.current.children] as HTMLElement[])
+        .slice(0, -1)
+        .map(v => v.firstChild as HTMLElement)
+
+      panes.forEach(pane => {
+        pane.style.transform = `translateY(${
+          -dy * (pane.offsetHeight - pane.parentElement!.offsetHeight)
+        }px)`
+      })
+    }
+
+    window.addEventListener('scroll', onScroll)
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
   return (
     <article
       className={style.textWrapper}
       style={{ '--tabs': sections.length } as CSSProperties}
-      onScroll={({ currentTarget: el }) => {
-        const dy = el.scrollTop / (el.scrollHeight - el.offsetHeight)
-
-        const panes = ([...el.children] as HTMLElement[])
-          .slice(0, -1)
-          .map(v => v.firstChild as HTMLElement)
-
-        panes.forEach(pane => {
-          pane.style.transform = `translateY(${
-            -dy * (pane.offsetHeight - pane.parentElement!.offsetHeight)
-          }px)`
-        })
-      }}
+      ref={container}
     >
       {sections.map((pane, column) => (
         <section

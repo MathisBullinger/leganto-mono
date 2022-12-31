@@ -1,9 +1,6 @@
 .textWrapper {
   @media (orientation: portrait) {
-    height: calc(100vh - var(--topnav-height));
-    display: flex;
-    flex-direction: column;
-    overflow: auto;
+    display: contents;
 
     section {
       flex: 1 1 0;
@@ -15,7 +12,14 @@
       contain: strict;
       top: calc(var(--topnav-height) + var(--h) / var(--tabs) * var(--tab));
       overflow: hidden;
-      pointer-events: none;
+    }
+
+    section:first-of-type {
+      border-bottom: 1px solid #000;
+    }
+
+    section:not(:first-of-type) {
+      border-top: 1px solid #000;
     }
 
     .content {
